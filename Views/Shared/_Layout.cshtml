@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RoboticCoders</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body class="layout-body">
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                    🤖 RoboticCoders
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div id="menu" class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto">
+
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
+                                        👑 Admin
+                                    </a>
+                                </li>
+                            }
+
+                            if (User.IsInRole("Docente"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Teacher" asp-action="Dashboard">
+                                        🧑‍🏫 Docente
+                                    </a>
+                                </li>
+                            }
+
+                            if (User.IsInRole("Estudiante"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Student" asp-action="Dashboard">
+                                        🎓 Mi aprendizaje
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link">
+                                        🚪 Cerrar sesión
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    🔐 Login
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CONTENIDO -->
+    <main class="layout-content">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="layout-footer">
+        <div class="container">
+            <p class="mb-1">© 2026 RoboticCoders</p>
+            <small>Aprendiendo tecnología desde pequeños 🚀</small>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

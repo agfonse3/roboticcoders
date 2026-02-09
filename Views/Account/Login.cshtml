@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="login-page">
+
+    <div class="login-card">
+
+        <!-- LADO IZQUIERDO -->
+        <div class="login-info">
+            <h2>Bienvenido a RoboticCoders 🚀</h2>
+            <p>
+                Aprende programación, robótica e idiomas
+                de forma divertida y práctica.
+            </p>
+
+            <ul>
+                <li>🎮 Cursos interactivos</li>
+                <li>🤖 Robótica y tecnología</li>
+                <li>🌍 Idiomas para el futuro</li>
+            </ul>
+        </div>
+
+        <!-- FORMULARIO -->
+        <div class="login-form">
+
+            <h3>Iniciar sesión</h3>
+@if (ViewBag.Error != null)
+{
+    <div class="error-message">
+        @ViewBag.Error
+    </div>
+}
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+    <input type="text" name="email" placeholder="Correo" required />
+    <input type="password" name="password" placeholder="Contraseña" required />
+
+    <button type="submit">Entrar</button>
+</form>
+
+        </div>
+
+    </div>
+
+</div>

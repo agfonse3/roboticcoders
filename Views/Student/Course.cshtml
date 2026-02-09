@@ -1,0 +1,42 @@
+@model RoboticCoders.Models.Course
+
+<div class="moodle-course-header mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; color: white;">
+    <h1 style="margin:0;">📚 @Model.Title</h1>
+    <p class="text-white-50">@Model.Description</p>
+</div>
+
+@if (Model.Modules != null && Model.Modules.Any())
+{
+    foreach (var module in Model.Modules)
+    {
+        <div class="card mb-3">
+            <div class="card-header bg-light">
+                <strong>@module.Title</strong>
+            </div>
+            <div class="card-body">
+                @if (module.Lessons != null && module.Lessons.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                    @foreach (var lesson in module.Lessons)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                📖 @lesson.Title
+                            </div>
+                            <a class="btn btn-sm btn-primary" href="/Student/Lesson/@lesson.Id">Ver</a>
+                        </li>
+                    }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No hay lecciones en este módulo.</p>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info">No hay módulos en este curso.</div>
+}

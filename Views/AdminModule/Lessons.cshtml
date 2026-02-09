@@ -1,0 +1,43 @@
+@model RoboticCoders.Models.Module
+@{
+    ViewData["Title"] = "Lecciones";
+}
+
+<h2>📘 Lecciones - @Model.Title</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
+<a asp-controller="AdminLesson"
+   asp-action="Create"
+   asp-route-moduleId="@Model.Id"
+   class="btn btn-success mb-3">
+   ➕ Nueva lección
+</a>
+
+<ul class="list-group">
+@foreach (var lesson in Model.Lessons)
+{
+    <li class="list-group-item">
+        <strong>@lesson.Title</strong>
+        <div>@lesson.Content</div>
+        <div class="mt-2">
+            @if (!string.IsNullOrEmpty(lesson.SlideUrl))
+            {
+                <a href="@lesson.SlideUrl" target="_blank" class="btn btn-sm btn-outline-secondary me-2">Ver diapositivas</a>
+            }
+            <a asp-controller="AdminLesson" asp-action="Edit" asp-route-id="@lesson.Id" class="btn btn-sm btn-primary me-2">Editar</a>
+            <a asp-controller="Course" asp-action="Lesson" asp-route-id="@lesson.Id" class="btn btn-sm btn-secondary">Ver en plataforma</a>
+        </div>
+        @if (!string.IsNullOrEmpty(lesson.VideoUrl))
+        {
+            <div>Video: @lesson.VideoUrl</div>
+        }
+    </li>
+}
+</ul>

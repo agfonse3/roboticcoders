@@ -1,0 +1,33 @@
+@model List<RoboticCoders.Models.Course>
+
+@{
+    ViewData["Title"] = "Cursos";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Cursos disponibles</h2>
+
+    <div class="row">
+        @foreach (var course in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-200 shadow-sm">
+                    <img src="@course.ImageUrl" class="card-img-top" style="height:480px; object-fit:cover;" />
+
+                    <div class="card-body">
+                        <h5 class="card-title">@course.Title</h5>
+                        <p class="card-text">@course.Description</p>
+                    </div>
+
+                    <div class="card-footer bg-white">
+                        <a class="btn btn-outline-primary w-100"
+   href="/Course/Details/@course.Id">
+    Ver curso
+</a>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

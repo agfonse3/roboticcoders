@@ -1,0 +1,14 @@
+<h2>Asignar Docente</h2>
+
+<form method="post">
+    <input type="hidden" name="courseId" value="@Model.Id" />
+
+    <select name="teacherId" class="form-select mb-3">
+        @foreach (var teacher in ViewBag.Teachers)
+        {
+            <option value="@teacher.Id">@teacher.Email</option>
+        }
+    </select>
+
+    <button class="btn btn-success">Asignar</button>
+</form>

@@ -1,0 +1,33 @@
+@model List<TeacherStudentProgressViewModel>
+
+<h2>📊 Progreso de Estudiantes</h2>
+
+<table class="progress-table">
+    <thead>
+        <tr>
+            <th>Estudiante</th>
+            <th>Lecciones Completadas</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var p in Model)
+{
+        <tr>
+            <td>@p.StudentEmail</td>
+            <td>@p.CompletedLessons</td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<style>
+.progress-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.progress-table th,
+.progress-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+</style>

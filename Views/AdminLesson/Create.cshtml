@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "Nueva lección";
+}
+
+<h2>📘 Nueva lección</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="ModuleId" value="@ViewBag.ModuleId" />
+
+    <div class="mb-3">
+        <label>Título</label>
+        <input name="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Contenido</label>
+        <textarea name="Content" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label>Video (opcional)</label>
+        <input name="VideoUrl" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Diapositivas (PDF)</label>
+        <input type="file" name="slides" accept=".pdf" class="form-control" />
+    </div>
+
+    <button class="btn btn-success">Guardar</button>
+</form>

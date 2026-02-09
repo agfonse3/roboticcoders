@@ -1,0 +1,49 @@
+@model RoboticCoders.Models.Course
+@{
+    ViewData["Title"] = "Módulos";
+}
+
+<div class="container mt-5">
+    <h2>📦 Módulos - @Model.Title</h2>
+    
+    <a asp-controller="AdminModule"
+       asp-action="Create"
+       asp-route-courseId="@Model.Id"
+       class="btn btn-primary mb-3">
+       ➕ Nuevo módulo
+    </a>
+
+    <div class="list-group">
+    @if (Model.Modules.Any())
+    {
+        @foreach (var m in Model.Modules)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5>@m.Title</h5>
+                    <small class="text-muted">@m.Lessons.Count lecciones</small>
+                </div>
+                <div class="btn-group">
+                    <a asp-controller="AdminModule"
+                       asp-action="Lessons"
+                       asp-route-id="@m.Id"
+                       class="btn btn-sm btn-info">
+                       📘 Ver lecciones
+                    </a>
+                    <a asp-controller="AdminModule" asp-action="Edit" asp-route-id="@m.Id" class="btn btn-sm btn-primary ms-1">✏️ Editar</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="list-group-item text-center text-muted">
+            No hay módulos aún. ¡Crea el primero!
+        </div>
+    }
+    </div>
+
+    <a asp-action="Dashboard" asp-controller="Admin" class="btn btn-secondary mt-3">
+        ⬅️ Volver al dashboard
+    </a>
+</div>

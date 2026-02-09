@@ -1,0 +1,44 @@
+@model List<TeacherCourseViewModel>
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; color: white; margin-bottom: 30px;">
+    <h1 style="margin: 0; font-size: 2em;">📘 Panel del Docente</h1>
+    <p class="text-white-50">Gestiona tus cursos, módulos y estudiantes</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+@if (Model != null && Model.Any())
+{
+    @foreach (var course in Model)
+    {
+        <div style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px;">
+                <h4 style="margin: 0;">@course.Title</h4>
+            </div>
+            <div style="padding: 15px;">
+                <div style="display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <small class="text-muted">Lecciones</small>
+                        <strong style="font-size: 1.2em;">@course.TotalLessons</strong>
+                    </div>
+                    <div style="flex: 1;">
+                        <small class="text-muted">Estudiantes</small>
+                        <strong style="font-size: 1.2em;">@course.StudentCount</strong>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 0 15px 15px;">
+                <a asp-action="Course"
+                   asp-route-courseId="@course.CourseId"
+                   class="btn btn-primary btn-sm w-100"
+                   style="width: 100%;">
+                   📖 Abrir curso
+                </a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info w-100">Sin cursos asignados.</div>
+}
+</div>

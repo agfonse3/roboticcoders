@@ -1,0 +1,105 @@
+@{
+    var course = (RoboticCoders.Models.Course)ViewBag.Course;
+    var teachers = (IEnumerable<RoboticCoders.Models.ApplicationUser>)ViewBag.Teachers;
+    var students = (IEnumerable<RoboticCoders.Models.ApplicationUser>)ViewBag.Students;
+    var assignedTeacherId = (string)ViewBag.AssignedTeacherId;
+    var enrolledStudentIds = (List<string>)ViewBag.EnrolledStudentIds;
+}
+
+<div class="manage-course-container">
+    <div class="course-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; color: white; margin-bottom: 30px;">
+        <h1 style="margin: 0;">⚙️ Configurar curso</h1>
+        <h2 style="font-size: 1.5em; font-weight: normal;">@course.Title</h2>
+    </div>
+
+    <form method="post" action="/Admin/ManageCourse" class="row">
+        <input type="hidden" name="id" value="@course.Id" />
+
+        <!-- Assignar docente -->
+        <div class="col-lg-6">
+            <div class="card mb-4" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">👨‍🏫 Docente Asignado</h4>
+                </div>
+                <div class="card-body">
+                    <label class="mb-3">Selecciona un docente:</label>
+                    <select name="selectedTeacherId" class="form-select form-select-lg">
+                        <option value="">-- Sin docente --</option>
+                        @foreach (var teacher in teachers)
+                        {
+                            if (assignedTeacherId == teacher.Id)
+                            {
+                                <option value="@teacher.Id" selected>@teacher.Email</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.Email</option>
+                            }
+                        }
+                    </select>
+                    <small class="text-muted mt-2 d-block">El docente podrá ver este curso y gestionar a sus estudiantes.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assign students -->
+        <div class="col-lg-6">
+            <div class="card mb-4" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">👥 Estudiantes Inscritos</h4>
+                </div>
+                <div class="card-body">
+                    <label class="mb-3">Selecciona estudiantes:</label>
+                    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 6px; padding: 10px;">
+                        @if (students != null && students.Any())
+                        {
+                            @foreach (var student in students)
+                            {
+                                <div class="form-check mb-2">
+                                    @if (enrolledStudentIds.Contains(student.Id))
+                                    {
+                                        <input class="form-check-input" type="checkbox" name="selectedStudentIds[]" value="@student.Id" id="student_@student.Id" checked />
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input" type="checkbox" name="selectedStudentIds[]" value="@student.Id" id="student_@student.Id" />
+                                    }
+                                    <label class="form-check-label" for="student_@student.Id">
+                                        @student.Email
+                                    </label>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">Sin estudiantes disponibles.</p>
+                        }
+                    </div>
+                    <small class="text-muted mt-2 d-block">Los estudiantes verán este curso en su dashboard.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    💾 Guardar configuración
+                </button>
+                <a href="/Admin/Dashboard" class="btn btn-secondary btn-lg">
+                    ❌ Cancelar
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .manage-course-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    .card {
+        border: none;
+    }
+</style>

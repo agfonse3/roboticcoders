@@ -1,0 +1,20 @@
+@model RoboticCoders.Models.Module
+@{
+    ViewData["Title"] = "Editar módulo";
+}
+
+<div class="container mt-4">
+    <h2>✏️ Editar módulo</h2>
+
+    <form method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label>Título</label>
+            <input name="Title" value="@Model.Title" class="form-control" />
+        </div>
+
+        <button class="btn btn-success">Guardar</button>
+        <a asp-controller="AdminCourse" asp-action="Modules" asp-route-id="@Model.CourseId" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

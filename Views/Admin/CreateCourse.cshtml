@@ -1,0 +1,52 @@
+@model RoboticCoders.Models.CreateCourseViewModel
+@{
+    ViewData["Title"] = "Crear Curso";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2>📘 Crear nuevo curso</h2>
+            <p class="text-muted">Después de crear el curso, podrás agregar módulos y lecciones.</p>
+
+            <form asp-action="CreateCourse" method="post" class="form-card">
+                <div class="mb-3">
+                    <label>Título del curso</label>
+                    <input asp-for="Title" class="form-control" placeholder="Ej: Introducción a Programación" required />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label>Descripción</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe el contenido del curso..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label>Imagen (URL)</label>
+                    <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        💾 Crear curso
+                    </button>
+                    <a asp-action="Dashboard" class="btn btn-secondary">
+                        ❌ Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+</style>
+

@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Recuperar contraseña";
+}
+
+<div class="login-page">
+
+    <div class="login-card">
+
+        <!-- INFO -->
+        <div class="login-info">
+            <h2>¿Olvidaste tu contraseña? 🔐</h2>
+            <p>
+                No te preocupes. Te ayudamos a recuperarla
+                en pocos pasos.
+            </p>
+
+            <ul>
+                <li>📩 Envío de correo seguro</li>
+                <li>⚡ Proceso rápido</li>
+                <li>🔒 Protección de datos</li>
+            </ul>
+        </div>
+
+        <!-- FORM -->
+        <div class="login-form">
+
+            <h3>Recuperar acceso</h3>
+
+            <form method="post">
+
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Correo electrónico" required />
+                </div>
+
+                <button type="submit" class="btn-primary login-btn">
+                    Enviar enlace
+                </button>
+
+                <div class="login-links">
+                    <a asp-action="Login">Volver a iniciar sesión</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+</div>

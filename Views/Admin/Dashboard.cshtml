@@ -1,0 +1,126 @@
+@using RoboticCoders.Models
+@model List<AdminUserViewModel>
+
+<div class="admin-header">
+    <h2 class="mb-4">📊 Panel de Administración</h2>
+</div>
+
+<a class="btn btn-success mb-3" asp-action="Register">
+    ➕ Crear usuario
+</a>
+<a asp-action="CreateCourse" class="btn btn-success mb-3">
+    ➕ Crear Curso
+</a>
+
+<!-- Sección de Cursos -->
+<h3 class="mt-5">📦 Cursos</h3>
+<div class="table-responsive">
+<table class="table table-striped shadow">
+    <thead class="table-dark">
+        <tr>
+            <th>Curso</th>
+            <th>Docente</th>
+            <th>Módulos</th>
+            <th>Lecciones</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    @{
+        var courses = ViewBag.Courses as List<Course>;
+        if (courses != null && courses.Count > 0)
+        {
+            @foreach (var course in courses)
+            {
+                int totalLessons = 0;
+                @foreach (var module in course.Modules)
+                {
+                    totalLessons += module.Lessons.Count;
+                }
+                <tr>
+                    <td><strong>@course.Title</strong></td>
+                    <td>@course.TeacherId</td>
+                    <td>@course.Modules.Count</td>
+                    <td>@totalLessons</td>
+                    <td>
+                        <a asp-controller="AdminCourse" asp-action="Modules" asp-route-id="@course.Id" class="btn btn-sm btn-info">
+                            📘 Ver módulos
+                        </a>
+                        <a asp-action="ManageCourse" asp-route-id="@course.Id" class="btn btn-sm btn-warning ms-2">
+                            ⚙️ Configurar
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">Sin cursos registrados</td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+</div>
+
+<!-- Sección de Usuarios -->
+<h3 class="mt-5">👥 Usuarios</h3>
+<table class="table table-striped shadow">
+    <thead class="table-dark">
+        <tr>
+            <th>Email</th>
+            <th>Rol</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Email</td>
+            <td>
+                <span class="badge bg-primary">@user.Role</span>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+<style>
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.admin-actions { display: flex; gap: 10px; }
+.btn-primary {
+    background: #4f46e5;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+.btn-logout {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.admin-table th, .admin-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.role {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #22c55e;
+    color: white;
+}
+</style>

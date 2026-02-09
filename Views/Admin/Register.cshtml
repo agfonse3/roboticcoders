@@ -1,0 +1,19 @@
+@model RegisterViewModel
+
+<h2>➕ Crear Usuario</h2>
+
+<form method="post">
+    <input asp-for="Email" placeholder="Email" />
+    <br />
+
+    <input asp-for="Password" type="password" placeholder="Contraseña" />
+    <br />
+
+    <select asp-for="Role">
+        <option value="Estudiante">Estudiante</option>
+        <option value="Docente">Docente</option>
+    </select>
+    <br />
+
+    <button type="submit">Crear usuario</button>
+</form>

@@ -1,0 +1,91 @@
+@model RoboticCoders.Models.Lesson
+@{
+    ViewData["Title"] = "Editar lección";
+}
+
+<h2>✏️ Editar lección</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="mb-3">
+        <label>Título</label>
+        <input name="Title" value="@Model.Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Contenido</label>
+        <textarea name="Content" class="form-control">@Model.Content</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label>Video (opcional)</label>
+        <input name="VideoUrl" value="@Model.VideoUrl" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Diapositivas actuales</label>
+        @if (!string.IsNullOrEmpty(Model.SlideUrl))
+        {
+            <div class="mb-2">
+                <iframe src="@Model.SlideUrl" width="100%" height="360"></iframe>
+            </div>
+            <div class="mb-2">
+                <a href="@Model.SlideUrl" target="_blank" class="btn btn-secondary">Abrir en nueva pestaña</a>
+                <a href="@Model.SlideUrl" download class="btn btn-outline-secondary">Descargar</a>
+            </div>
+            <small class="text-muted">Sube un nuevo archivo para reemplazar las diapositivas actuales.</small>
+        }
+        else
+        {
+            <p class="text-muted">No hay diapositivas cargadas.</p>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label>Reemplazar diapositivas (PDF)</label>
+        <input type="file" name="slides" accept=".pdf" class="form-control" />
+    </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-success">Guardar cambios</button>
+
+                <a asp-action="Lessons" asp-controller="AdminModule" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Cancelar</a>
+
+                @if (!string.IsNullOrEmpty(Model.SlideUrl))
+                {
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSlidesModal">Eliminar diapositivas</button>
+                }
+            </div>
+</form>
+
+@* Modal Bootstrap para confirmación de eliminación *@
+<div class="modal fade" id="deleteSlidesModal" tabindex="-1" aria-labelledby="deleteSlidesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteSlidesModalLabel">Eliminar diapositivas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres eliminar las diapositivas actuales? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-action="DeleteSlides" method="post" class="m-0">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

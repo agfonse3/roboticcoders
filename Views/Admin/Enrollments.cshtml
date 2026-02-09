@@ -1,0 +1,22 @@
+@model IEnumerable<RoboticCoders.Models.CourseEnrollment>
+
+<h2>Inscripciones (CourseEnrollments)</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Curso</th>
+            <th>Estudiante (Email)</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(var e in Model)
+    {
+        <tr>
+            <td>@e.Id</td>
+            <td>@e.Course?.Title</td>
+            <td>@e.User?.Email</td>
+        </tr>
+    }
+    </tbody>
+</table>

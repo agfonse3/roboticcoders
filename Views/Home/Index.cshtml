@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Aprende Tecnología Jugando</h1>
+        <p>
+            Programación, robótica e idiomas para niños y adolescentes.
+            Creamos futuros innovadores 🚀
+        </p>
+
+        <div class="hero-actions">
+            <a asp-controller="Course" asp-action="Index" class="btn-primary">Ver Cursos</a>
+            <a asp-controller="Account" asp-action="Login" class="btn-outline">Iniciar Sesión</a>
+        </div>
+    </div>
+
+    <img src="img/home/kids.jpg" class="hero-image" alt="Niños programando" />
+</section>
+
+<!-- SKILLS -->
+<section class="skills">
+    <h2>¿Qué aprenderás?</h2>
+
+    <div class="skills-grid">
+        <div class="skill-card">
+            <h4>🎮 Programación</h4>
+            <p>Roblox, Unity y C# de forma divertida</p>
+        </div>
+
+        <div class="skill-card">
+            <h4>🤖 Robótica</h4>
+            <p>Arduino y pensamiento lógico</p>
+        </div>
+
+        <div class="skill-card">
+            <h4>🧠 Creatividad</h4>
+            <p>Diseño 3D y resolución de problemas</p>
+        </div>
+
+        <div class="skill-card">
+            <h4>🌍 Idiomas</h4>
+            <p>Inglés y Alemán aplicados a la tecnología</p>
+        </div>
+    </div>
+</section>
+
+<!-- EDADES -->
+<section class="ages">
+    <h2>Para todas las edades</h2>
+    <p>Programas adaptados para niños y adolescentes</p>
+
+    <div class="ages-badges">
+        <span>6 - 9 años</span>
+        <span>10 - 13 años</span>
+        <span>14 - 18 años</span>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <h2>Empieza hoy en RoboticCoders</h2>
+    <p>Convierte la pasión por la tecnología en habilidades reales</p>
+    <a asp-controller="Course" asp-action="Index" class="btn-primary">
+        Explorar Cursos
+    </a>
+</section>

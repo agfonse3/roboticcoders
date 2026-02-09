@@ -1,0 +1,18 @@
+<h2>Cursos</h2>
+
+<a asp-action="CreateCourse">➕ Nuevo curso</a>
+
+<table>
+    <tr>
+        <th>Título</th>
+        <th>Descripción</th>
+    </tr>
+
+@foreach (var course in Model)
+{
+    <tr>
+        <td>@course.Title</td>
+        <td>@course.Description</td>
+    </tr>
+}
+</table>

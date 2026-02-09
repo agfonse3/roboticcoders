@@ -1,0 +1,75 @@
+<div class="lesson-container">
+    <h2>@Model.Title</h2>
+
+    @if (!string.IsNullOrEmpty(Model.VideoUrl))
+    {
+        <div class="mb-3">
+            <iframe width="100%" height="400" src="@Model.VideoUrl"></iframe>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SlideUrl))
+    {
+        @model RoboticCoders.Models.StudentLessonViewModel
+@model RoboticCoders.Models.StudentLessonViewModel
+
+<div class="lesson-container">
+    <h2>@Model.Lesson.Title</h2>
+
+    @if (!string.IsNullOrEmpty(Model.Lesson.VideoUrl))
+    {
+        <div class="mb-3">
+            <iframe width="100%" height="400" src="@Model.Lesson.VideoUrl"></iframe>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Lesson.SlideUrl))
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>Diapositivas</strong>
+                    <div>
+                        <a href="@Model.Lesson.SlideUrl" target="_blank" class="btn btn-sm btn-secondary me-2">Abrir</a>
+                        <a href="@Model.Lesson.SlideUrl" download class="btn btn-sm btn-outline-secondary">Descargar</a>
+                    </div>
+                </div>
+
+                <div style="height:560px;">
+                    <iframe src="@Model.Lesson.SlideUrl" width="100%" height="100%" style="border:0;"></iframe>
+                </div>
+            </div>
+        </div>
+    }
+
+    <p>@Model.Lesson.Content</p>
+
+    <div class="d-flex gap-2 mb-3">
+        <form asp-action="CompleteLesson" method="post" class="m-0">
+            <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
+            <input type="hidden" name="nextLessonId" value="@(Model.NextLessonId ?? 0)" />
+            <button class="btn btn-success">
+                ✅ Marcar como completada
+            </button>
+        </form>
+
+        @if (Model.NextLessonId.HasValue)
+        {
+            <a class="btn btn-primary" href="/Student/Lesson/@Model.NextLessonId">Siguiente lección →</a>
+        }
+        else
+        {
+            <a class="btn btn-secondary" href="/Student/Course/@Model.CourseId">Volver al curso</a>
+        }
+    </div>
+
+    @if (Model.IsCompleted)
+    {
+        <div class="alert alert-success">Lección completada ✅</div>
+    }
+</div>
+
+<style>
+.lesson-container iframe { background: #fff; }
+.card { box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+</style>
