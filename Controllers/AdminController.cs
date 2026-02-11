@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoboticCoders.Data;
 using RoboticCoders.Models;
+using RoboticCoders.ViewModels.Admin; 
 
 namespace RoboticCoders.Controllers
 {
@@ -12,16 +13,97 @@ namespace RoboticCoders.Controllers
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public AdminController(
-            UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context)
+
+public AdminController(
+    UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager,
+    ApplicationDbContext context)
+{
+    _userManager = userManager;
+    _roleManager = roleManager;
+    _context = context;
+}
+
+
+   // GET: Editar usuario
+    public async Task<IActionResult> EditUser(string id)
     {
-        _userManager = userManager;
-        _context = context;
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null) return NotFound();
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return View(new EditUserViewModel
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Role = roles.FirstOrDefault()
+        });
     }
 
-   
+    // POST: Editar usuario
+[HttpPost]
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> EditUser(EditUserViewModel model)
+{
+    if (!ModelState.IsValid)
+        return View(model);
+
+    var user = await _userManager.FindByIdAsync(model.Id);
+    if (user == null)
+        return NotFound();
+
+    if (user.Email == "admin@roboticcoders.com")
+    {
+        ModelState.AddModelError("", "No puedes modificar este administrador.");
+        return View(model);
+    }
+
+    user.Email = model.Email;
+    user.UserName = model.Email;
+
+    await _userManager.UpdateAsync(user);
+
+    if (!await _roleManager.RoleExistsAsync(model.Role))
+    {
+        ModelState.AddModelError("", "El rol seleccionado no existe.");
+        return View(model);
+    }
+
+    var currentRoles = await _userManager.GetRolesAsync(user);
+
+    if (!currentRoles.Contains(model.Role))
+    {
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        await _userManager.AddToRoleAsync(user, model.Role);
+    }
+
+    return RedirectToAction("Dashboard");
+}
+
+
+    // GET: Eliminar usuario
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null) return NotFound();
+
+        return View(user);
+    }
+
+    // POST: Confirmar eliminación
+    [HttpPost, ActionName("DeleteUser")]
+    public async Task<IActionResult> DeleteUserConfirmed(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user != null)
+            await _userManager.DeleteAsync(user);
+
+        return RedirectToAction("Dashboard");
+    }
     // ================= DASHBOARD =================
     public async Task<IActionResult> Dashboard()
     {
@@ -41,7 +123,7 @@ namespace RoboticCoders.Controllers
 
             model.Add(new AdminUserViewModel
             {
-                UserId = user.Id,
+                Id = user.Id,
                 Email = user.Email!,
                 Role = roles.FirstOrDefault() ?? "Sin rol"
             });
@@ -173,26 +255,32 @@ namespace RoboticCoders.Controllers
     }
 
     // 👉 Gestionar curso (asignar docente y estudiantes)
-    [HttpGet]
-    public async Task<IActionResult> ManageCourse(int id)
-    {
-        var course = await _context.Courses.FindAsync(id);
-        if (course == null) return NotFound();
+  [HttpGet]
+public async Task<IActionResult> ManageCourse(int id)
+{
+    var course = await _context.Courses
+        .Include(c => c.Modules)
+            .ThenInclude(m => m.Lessons)
+        .FirstOrDefaultAsync(c => c.Id == id);
 
-        var teachers = await _userManager.GetUsersInRoleAsync("Docente");
-        var students = await _userManager.GetUsersInRoleAsync("Estudiante");
+    if (course == null)
+        return NotFound();
 
-        ViewBag.Course = course;
-        ViewBag.Teachers = teachers;
-        ViewBag.Students = students;
-        ViewBag.AssignedTeacherId = course.TeacherId;
-        ViewBag.EnrolledStudentIds = await _context.CourseEnrollments
-            .Where(e => e.CourseId == id)
-            .Select(e => e.UserId)
-            .ToListAsync();
+    ViewBag.Course = course;
 
-        return View();
-    }
+    ViewBag.Teachers = await _userManager.GetUsersInRoleAsync("Teacher");
+    ViewBag.Students = await _userManager.GetUsersInRoleAsync("Student");
+
+    ViewBag.AssignedTeacherId = course.TeacherId;
+
+    ViewBag.EnrolledStudentIds = await _context.CourseEnrollments
+        .Where(cs => cs.CourseId == id)
+        .Select(cs => cs.UserId)
+        .ToListAsync();
+
+    return View();
+}
+
 
     [HttpPost]
     public async Task<IActionResult> ManageCourse(int id, string? selectedTeacherId, string[]? selectedStudentIds)

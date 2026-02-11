@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoboticCoders.Data;
 using RoboticCoders.Models;
+using RoboticCoders.ViewModels.Student;
 
 [Authorize(Roles = "Estudiante")]
 public class StudentController : Controller
@@ -23,10 +24,9 @@ public class StudentController : Controller
     {
         var user = await _userManager.GetUserAsync(User);
 
-    var roles = await _userManager.GetRolesAsync(user!);
-    Console.WriteLine("ROLES DEL USUARIO: " + string.Join(",", roles));
+        var roles = await _userManager.GetRolesAsync(user!);
+        Console.WriteLine("ROLES DEL USUARIO: " + string.Join(",", roles));
        
-
         var courses = await _context.CourseEnrollments
             .Where(e => e.UserId == user!.Id)
             .Include(e => e.Course!)
@@ -82,27 +82,45 @@ public class StudentController : Controller
 
         if (!enrolled) return NotFound();
 
-        // build ordered list of lessons for the course
-        var lessonsOrdered = await _context.Modules
-            .Where(m => m.CourseId == courseId)
+        var course = await _context.Courses
+            .Where(c => c.Id == courseId)
+            .Include(c => c.Modules)
+                .ThenInclude(m => m.Lessons)
+            .FirstOrDefaultAsync();
+
+        var lessonsOrdered = course?.Modules
             .OrderBy(m => m.Id)
             .SelectMany(m => m.Lessons.OrderBy(l => l.Id))
-            .ToListAsync();
+            .ToList() ?? new List<Lesson>();
 
         var idx = lessonsOrdered.FindIndex(l => l.Id == id);
         int? nextId = null;
         if (idx >= 0 && idx < lessonsOrdered.Count - 1)
             nextId = lessonsOrdered[idx + 1].Id;
 
-        var progress = await _context.StudentLessonProgresses
-            .FirstOrDefaultAsync(p => p.UserId == user.Id && p.LessonId == id);
+        var progressForUser = await _context.StudentLessonProgresses
+            .Where(p => p.UserId == user.Id && course != null)
+            .ToListAsync();
 
-        var vm = new RoboticCoders.Models.StudentLessonViewModel
+        var completedIds = progressForUser
+            .Where(p => p.IsCompleted)
+            .Select(p => p.LessonId)
+            .ToHashSet();
+
+        var totalLessons = lessonsOrdered.Count;
+        var completedCount = completedIds.Count;
+        var progressPercent = totalLessons == 0 ? 0 : (completedCount * 100) / totalLessons;
+
+        var vm = new StudentLessonViewModel
         {
             Lesson = lesson,
             NextLessonId = nextId,
-            IsCompleted = progress?.IsCompleted ?? false,
-            CourseId = courseId
+            IsCompleted = progressForUser.FirstOrDefault(p => p.LessonId == id)?.IsCompleted ?? false,
+            CourseId = courseId,
+            Course = course,
+            Modules = course?.Modules.OrderBy(m => m.Id).ToList() ?? new List<Module>(),
+            CompletedLessonIds = completedIds,
+            ProgressPercent = progressPercent
         };
 
         return View("Lesson", vm);
@@ -142,17 +160,19 @@ public class StudentController : Controller
 
         if (progress == null)
         {
-            progress = new RoboticCoders.Models.StudentLessonProgress
+            progress = new StudentLessonProgress
             {
                 UserId = user.Id,
                 LessonId = lessonId,
-                IsCompleted = true
+                IsCompleted = true,
+                CompletedAt = DateTime.UtcNow
             };
             _context.StudentLessonProgresses.Add(progress);
         }
         else
         {
             progress.IsCompleted = true;
+            progress.CompletedAt = DateTime.UtcNow;
             _context.StudentLessonProgresses.Update(progress);
         }
 
@@ -161,7 +181,6 @@ public class StudentController : Controller
         if (nextLessonId.HasValue)
             return RedirectToAction("Lesson", new { id = nextLessonId.Value });
 
-        // otherwise redirect back to the course
         var lesson = await _context.Lessons.Include(l => l.Module).FirstOrDefaultAsync(l => l.Id == lessonId);
         var courseId = lesson?.Module?.CourseId;
         if (courseId.HasValue && courseId.Value > 0)

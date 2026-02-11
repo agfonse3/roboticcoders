@@ -100,4 +100,11 @@ public async Task<IActionResult> Login(
 
         return View("ForgotConfirmation");
     }
+
+    [HttpGet]
+    public IActionResult AccessDenied(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
+    }
 }

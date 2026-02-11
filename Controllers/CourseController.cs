@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoboticCoders.Data;
 using RoboticCoders.Models;
+using RoboticCoders.ViewModels.Student;
 
 namespace RoboticCoders.Controllers
 {
@@ -37,10 +38,35 @@ namespace RoboticCoders.Controllers
 
         public async Task<IActionResult> Lesson(int id)
         {
-            var lesson = await _context.Lessons.FindAsync(id);
+            var lesson = await _context.Lessons
+                .Include(l => l.Module)
+                .ThenInclude(m => m.Course)
+                .FirstOrDefaultAsync(l => l.Id == id);
+
             if (lesson == null) return NotFound();
 
-            return View("../Student/Lesson", lesson);
+            var courseId = lesson.Module?.CourseId ?? 0;
+
+            var lessonsOrdered = await _context.Modules
+                .Where(m => m.CourseId == courseId)
+                .OrderBy(m => m.Id)
+                .SelectMany(m => m.Lessons.OrderBy(l => l.Id))
+                .ToListAsync();
+
+            var idx = lessonsOrdered.FindIndex(l => l.Id == id);
+            int? nextId = null;
+            if (idx >= 0 && idx < lessonsOrdered.Count - 1)
+                nextId = lessonsOrdered[idx + 1].Id;
+
+            var vm = new StudentLessonViewModel
+            {
+                Lesson = lesson,
+                NextLessonId = nextId,
+                IsCompleted = false,
+                CourseId = courseId
+            };
+
+            return View("../Student/Lesson", vm);
         }
     }
 }

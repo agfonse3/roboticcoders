@@ -79,6 +79,55 @@
                 </div>
             </div>
         </div>
+<div class="col-12">
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">📚 Módulos y Lecciones</h4>
+        </div>
+        <div class="card-body">
+            <!-- Crear módulo -->
+            <form method="post" asp-action="CreateModule" class="mb-3 d-flex gap-2">
+                <input type="hidden" name="courseId" value="@course.Id" />
+                <input type="text" name="title" placeholder="Nuevo módulo" class="form-control" />
+                <button type="submit" class="btn btn-primary">➕ Agregar módulo</button>
+            </form>
+
+            @if (course.Modules != null && course.Modules.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var module in course.Modules)
+                    {
+                        <li class="list-group-item">
+                            <strong>@module.Title</strong>
+
+                            <!-- Crear lección -->
+                            <form method="post" asp-action="CreateLesson" class="mt-2 d-flex gap-2">
+                                <input type="hidden" name="moduleId" value="@module.Id" />
+                                <input type="text" name="title" placeholder="Nueva lección" class="form-control" />
+                                <button type="submit" class="btn btn-secondary">➕ Agregar lección</button>
+                            </form>
+
+                            <!-- Listado de lecciones -->
+                            @if (module.Lessons != null && module.Lessons.Any())
+                            {
+                                <ul class="mt-2">
+                                    @foreach (var lesson in module.Lessons)
+                                    {
+                                        <li>@lesson.Title</li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No hay módulos creados aún.</p>
+            }
+        </div>
+    </div>
+</div>
 
         <div class="col-12">
             <div class="d-flex gap-2">

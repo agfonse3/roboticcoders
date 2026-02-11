@@ -9,15 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 // SERVICIOS
 // =========================
 
-// MVC
 builder.Services.AddControllersWithViews();
 
-// DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -29,13 +26,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// 🔐 Configuración de cookies (CLAVE)
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
-
 
 var app = builder.Build();
 
@@ -51,24 +46,19 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
-// 🔥 AUTH DEBE IR AQUÍ 🔥
 app.UseAuthentication();
 app.UseAuthorization();
 
-// =========================
-// RUTAS
-// =========================
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
+// =========================
+// SEED ROLES Y ADMIN (ÚNICO)
+// =========================
 
-// =========================
-// SEED ROLES Y ADMIN
-// =========================
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();

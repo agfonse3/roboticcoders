@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Acceso denegado";
+}
+
+<h2>Acceso denegado</h2>
+<p>No tienes permisos para acceder a esta página.</p>
+@if (ViewData["ReturnUrl"] != null)
+{
+    <p>Intentaste acceder a: @ViewData["ReturnUrl"]</p>
+}
+
+<p><a href="/Account/Login">Iniciar sesión</a> o vuelve a la <a href="/">página principal</a>.</p>
