@@ -1,19 +1,48 @@
-@model RegisterViewModel
+@model RoboticCoders.ViewModels.Admin.RegisterViewModel
 
-<h2>➕ Crear Usuario</h2>
+<h2>Crear usuario</h2>
 
-<form method="post">
-    <input asp-for="Email" placeholder="Email" />
-    <br />
+<form method="post" asp-action="Register">
+    @Html.AntiForgeryToken()
 
-    <input asp-for="Password" type="password" placeholder="Contraseña" />
-    <br />
+    <div class="mb-3">
+        <label asp-for="FirstName">Nombres</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
 
-    <select asp-for="Role">
-        <option value="Estudiante">Estudiante</option>
-        <option value="Docente">Docente</option>
-    </select>
-    <br />
+    <div class="mb-3">
+        <label asp-for="LastName">Apellidos</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
 
-    <button type="submit">Crear usuario</button>
+    <div class="mb-3">
+        <label asp-for="Address">Direccion</label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="City">Ciudad</label>
+        <input asp-for="City" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password">Contrasena</label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Role">Rol</label>
+        <select asp-for="Role" class="form-select">
+            <option value="Estudiante">Estudiante</option>
+            <option value="Docente">Docente</option>
+            <option value="Admin">Admin</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear usuario</button>
 </form>

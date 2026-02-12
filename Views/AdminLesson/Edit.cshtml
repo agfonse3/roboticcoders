@@ -1,23 +1,39 @@
 @model RoboticCoders.Models.Lesson
 @{
-    ViewData["Title"] = "Editar lección";
+    ViewData["Title"] = "Editar leccion";
+    var slidePath = string.IsNullOrWhiteSpace(Model.SlideUrl) ? string.Empty : Url.Content(Model.SlideUrl);
+    var hasSlides = !string.IsNullOrWhiteSpace(slidePath);
+    var isPdf = hasSlides && slidePath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
+    var isPpt = hasSlides && (slidePath.EndsWith(".ppt", StringComparison.OrdinalIgnoreCase) || slidePath.EndsWith(".pptx", StringComparison.OrdinalIgnoreCase));
+    var canPreviewInline = isPdf || isPpt;
+
+    var isAbsoluteSlide = hasSlides && (slidePath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || slidePath.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+    var absoluteSlideUrl = hasSlides
+        ? (isAbsoluteSlide ? slidePath : $"{Context.Request.Scheme}://{Context.Request.Host}{slidePath}")
+        : string.Empty;
+    var officeEmbedUrl = isPpt
+        ? $"https://view.officeapps.live.com/op/embed.aspx?src={Uri.EscapeDataString(absoluteSlideUrl)}"
+        : string.Empty;
+    var googleEmbedUrl = isPpt
+        ? $"https://docs.google.com/gview?embedded=true&url={Uri.EscapeDataString(absoluteSlideUrl)}"
+        : string.Empty;
+    var isLocalHost = string.Equals(Context.Request.Host.Host, "localhost", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(Context.Request.Host.Host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
 }
 
-<h2>✏️ Editar lección</h2>
+<h2>Editar leccion</h2>
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-    </div>
+    <div class="alert alert-success">@TempData["Message"]</div>
 }
 
 <form method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
     <input type="hidden" name="Id" value="@Model.Id" />
 
     <div class="mb-3">
-        <label>Título</label>
+        <label>Titulo</label>
         <input name="Title" value="@Model.Title" class="form-control" />
     </div>
 
@@ -33,16 +49,47 @@
 
     <div class="mb-3">
         <label>Diapositivas actuales</label>
-        @if (!string.IsNullOrEmpty(Model.SlideUrl))
+        @if (hasSlides)
         {
+            @if (canPreviewInline)
+            {
+                @if (isPdf)
+                {
+                    <div class="mb-2">
+                        <iframe src="@slidePath" width="100%" height="360"></iframe>
+                    </div>
+                }
+                else if (isPpt)
+                {
+                    <div class="viewer-switch mb-2">
+                        <button type="button" class="btn btn-sm btn-outline-primary active" data-viewer="office">Microsoft</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="google">Google</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="direct">Navegador</button>
+                    </div>
+                    <div class="mb-2">
+                        <iframe id="adminPptPreviewFrame"
+                                src="@officeEmbedUrl"
+                                width="100%"
+                                height="360"
+                                data-office="@officeEmbedUrl"
+                                data-google="@googleEmbedUrl"
+                                data-direct="@slidePath"></iframe>
+                    </div>
+                    @if (isLocalHost)
+                    {
+                        <p class="text-muted mb-2">Si estas en localhost, Microsoft/Google no pueden leer tu archivo local. Usa Navegador, Abrir o Descargar.</p>
+                    }
+                }
+            }
+            else
+            {
+                <p class="text-muted mb-2">La vista previa en linea solo esta disponible para PDF, PPT y PPTX.</p>
+            }
+
             <div class="mb-2">
-                <iframe src="@Model.SlideUrl" width="100%" height="360"></iframe>
+                <a href="@slidePath" target="_blank" class="btn btn-secondary">Abrir</a>
+                <a href="@slidePath" download class="btn btn-outline-secondary">Descargar</a>
             </div>
-            <div class="mb-2">
-                <a href="@Model.SlideUrl" target="_blank" class="btn btn-secondary">Abrir en nueva pestaña</a>
-                <a href="@Model.SlideUrl" download class="btn btn-outline-secondary">Descargar</a>
-            </div>
-            <small class="text-muted">Sube un nuevo archivo para reemplazar las diapositivas actuales.</small>
         }
         else
         {
@@ -51,41 +98,43 @@
     </div>
 
     <div class="mb-3">
-        <label>Reemplazar diapositivas (PDF)</label>
-        <input type="file" name="slides" accept=".pdf" class="form-control" />
+        <label>Reemplazar diapositivas (PDF, PPT o PPTX)</label>
+        <input type="file" name="slides" accept=".pdf,.ppt,.pptx" class="form-control" />
     </div>
 
-            <div class="d-flex gap-2">
-                <button class="btn btn-success">Guardar cambios</button>
-
-                <a asp-action="Lessons" asp-controller="AdminModule" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Cancelar</a>
-
-                @if (!string.IsNullOrEmpty(Model.SlideUrl))
-                {
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSlidesModal">Eliminar diapositivas</button>
-                }
-            </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-success">Guardar cambios</button>
+        <a asp-action="Lessons" asp-controller="AdminModule" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Cancelar</a>
+    </div>
 </form>
 
-@* Modal Bootstrap para confirmación de eliminación *@
-<div class="modal fade" id="deleteSlidesModal" tabindex="-1" aria-labelledby="deleteSlidesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteSlidesModalLabel">Eliminar diapositivas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                ¿Estás seguro de que quieres eliminar las diapositivas actuales? Esta acción no se puede deshacer.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form asp-action="DeleteSlides" method="post" class="m-0">
-                        <input type="hidden" name="id" value="@Model.Id" />
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+@if (hasSlides)
+{
+    <form asp-action="DeleteSlides" method="post" class="mt-3">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn btn-danger">Eliminar diapositivas</button>
+    </form>
+}
+
+<script>
+    (() => {
+        const frame = document.getElementById('adminPptPreviewFrame');
+        if (!frame) return;
+
+        const buttons = document.querySelectorAll('.viewer-switch [data-viewer]');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-viewer');
+                const nextSrc =
+                    mode === 'google' ? frame.dataset.google :
+                    mode === 'direct' ? frame.dataset.direct :
+                    frame.dataset.office;
+                frame.src = nextSrc || frame.src;
+
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    })();
+</script>

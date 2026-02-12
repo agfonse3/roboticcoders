@@ -1,49 +1,427 @@
-@model RoboticCoders.Models.Course
+﻿@model RoboticCoders.ViewModels.Admin.AdminCourseModulesViewModel
 @{
-    ViewData["Title"] = "Módulos";
+    ViewData["Title"] = "Modulos";
+    var orderedModules = Model.Course.Modules.OrderBy(m => m.Id).ToList();
+    var laggingStudents = Model.Students
+        .OrderByDescending(s => s.MissingLessons)
+        .ThenBy(s => s.ProgressPercent)
+        .ThenBy(s => s.StudentEmail)
+        .Take(5)
+        .ToList();
 }
 
-<div class="container mt-5">
-    <h2>📦 Módulos - @Model.Title</h2>
-    
-    <a asp-controller="AdminModule"
-       asp-action="Create"
-       asp-route-courseId="@Model.Id"
-       class="btn btn-primary mb-3">
-       ➕ Nuevo módulo
-    </a>
-
-    <div class="list-group">
-    @if (Model.Modules.Any())
-    {
-        @foreach (var m in Model.Modules)
-        {
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <h5>@m.Title</h5>
-                    <small class="text-muted">@m.Lessons.Count lecciones</small>
-                </div>
-                <div class="btn-group">
-                    <a asp-controller="AdminModule"
-                       asp-action="Lessons"
-                       asp-route-id="@m.Id"
-                       class="btn btn-sm btn-info">
-                       📘 Ver lecciones
-                    </a>
-                    <a asp-controller="AdminModule" asp-action="Edit" asp-route-id="@m.Id" class="btn btn-sm btn-primary ms-1">✏️ Editar</a>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <div class="list-group-item text-center text-muted">
-            No hay módulos aún. ¡Crea el primero!
+<div class="admin-modules-page">
+    <div class="hero-card">
+        <div>
+            <p class="hero-eyebrow">Gestor de contenido</p>
+            <h1>Modulos de @Model.Course.Title</h1>
+            <p class="hero-copy">Crea modulos, agrega lecciones y revisa rapidamente lo que le falta a cada estudiante.</p>
         </div>
-    }
+        <div class="hero-actions">
+            <a asp-controller="AdminModule"
+               asp-action="Create"
+               asp-route-courseId="@Model.Course.Id"
+               class="btn btn-primary btn-lg">
+                Nuevo modulo
+            </a>
+            <a asp-action="ManageCourse" asp-controller="Admin" asp-route-id="@Model.Course.Id" class="btn btn-outline-light">
+                Configurar curso
+            </a>
+            <a asp-action="Dashboard" asp-controller="Admin" class="btn btn-light">
+                Volver a cursos
+            </a>
+        </div>
     </div>
 
-    <a asp-action="Dashboard" asp-controller="Admin" class="btn btn-secondary mt-3">
-        ⬅️ Volver al dashboard
-    </a>
+    <div class="row g-4 mt-1">
+        <div class="col-xl-7">
+            <section class="panel-card">
+                <div class="panel-head">
+                    <h2>Modulos y lecciones</h2>
+                    <span class="badge-shell">@orderedModules.Count modulos</span>
+                </div>
+
+                @if (orderedModules.Any())
+                {
+                    <div class="module-stack">
+                        @foreach (var entry in orderedModules.Select((module, index) => new { module, index }))
+                        {
+                            <article class="module-item">
+                                <div class="module-main">
+                                    <p class="module-order">Modulo @(entry.index + 1)</p>
+                                    <h3>@entry.module.Title</h3>
+                                    <p>@entry.module.Lessons.Count lecciones</p>
+                                </div>
+                                <div class="module-actions">
+                                    <a asp-controller="AdminModule"
+                                       asp-action="Lessons"
+                                       asp-route-id="@entry.module.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Ver lecciones
+                                    </a>
+                                    <a asp-controller="AdminModule"
+                                       asp-action="Edit"
+                                       asp-route-id="@entry.module.Id"
+                                       class="btn btn-sm btn-primary">
+                                        Editar
+                                    </a>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-panel">
+                        No hay modulos aun. Crea el primero para comenzar.
+                    </div>
+                }
+            </section>
+        </div>
+
+        <div class="col-xl-5">
+            <section class="panel-card">
+                <div class="panel-head">
+                    <h2>Lecciones faltantes por estudiante</h2>
+                    <span class="badge-shell">@Model.Students.Count estudiantes</span>
+                </div>
+
+                @if (Model.Students.Any())
+                {
+                    <div class="lagging-card">
+                        <h3>Top 5 mas atrasados</h3>
+                        <p>Ordenado por lecciones faltantes y menor progreso.</p>
+                        <div class="table-responsive">
+                            <table class="table table-sm lagging-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Estudiante</th>
+                                        <th>Faltan</th>
+                                        <th>Progreso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var student in laggingStudents)
+                                    {
+                                        <tr>
+                                            <td>@student.StudentEmail</td>
+                                            <td>@student.MissingLessons</td>
+                                            <td>@student.ProgressPercent%</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="students-scroll">
+                        @foreach (var student in Model.Students)
+                        {
+                            <article class="student-item">
+                                <div class="student-top">
+                                    <strong>@student.StudentEmail</strong>
+                                    <span>@student.ProgressPercent%</span>
+                                </div>
+
+                                <div class="progress progress-shell" role="progressbar" aria-valuenow="@student.ProgressPercent" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" style="width:@student.ProgressPercent%"></div>
+                                </div>
+
+                                <p class="student-meta">@student.CompletedLessons / @Model.TotalLessons completadas</p>
+
+                                @if (student.MissingLessons == 0)
+                                {
+                                    <p class="ok-note">No tiene lecciones pendientes.</p>
+                                }
+                                else
+                                {
+                                    <details>
+                                        <summary>Ver @student.MissingLessons lecciones pendientes</summary>
+                                        <ul class="missing-list">
+                                            @foreach (var lessonTitle in student.MissingLessonTitles)
+                                            {
+                                                <li>@lessonTitle</li>
+                                            }
+                                        </ul>
+                                    </details>
+                                }
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-panel">
+                        Este curso no tiene estudiantes inscritos.
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
 </div>
+
+<style>
+    .admin-modules-page {
+        --ink: #0b1325;
+        --muted: #5e6b85;
+        --surface: #ffffff;
+        --line: #d9dfeb;
+        --bg: radial-gradient(circle at 0% 0%, #e2f2ff 0%, #f5f8ff 35%, #f9fbff 100%);
+        max-width: 1320px;
+        margin: 24px auto 48px;
+        padding: 0 20px;
+        color: var(--ink);
+    }
+
+    .hero-card {
+        background: linear-gradient(140deg, #113f8f 0%, #0c6a95 55%, #0f8b8d 100%);
+        color: #fff;
+        border-radius: 20px;
+        padding: 28px;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: 1fr auto;
+        box-shadow: 0 22px 40px rgba(11, 46, 104, 0.28);
+        background-image: var(--bg), linear-gradient(140deg, #113f8f 0%, #0c6a95 55%, #0f8b8d 100%);
+        background-blend-mode: soft-light, normal;
+    }
+
+    .hero-eyebrow {
+        margin: 0;
+        font-size: .8rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        opacity: .86;
+    }
+
+    .hero-card h1 {
+        margin: 4px 0 8px;
+        font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+        font-weight: 800;
+    }
+
+    .hero-copy {
+        margin: 0;
+        max-width: 70ch;
+        color: rgba(255,255,255,.95);
+    }
+
+    .hero-actions {
+        display: grid;
+        gap: 10px;
+        align-content: center;
+        min-width: 220px;
+    }
+
+    .panel-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 10px 24px rgba(12, 38, 78, 0.08);
+    }
+
+    .panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .panel-head h2 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .badge-shell {
+        background: #e7efff;
+        color: #1747a6;
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: .78rem;
+        font-weight: 700;
+    }
+
+    .module-stack {
+        display: grid;
+        gap: 10px;
+    }
+
+    .module-item {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .module-order {
+        margin: 0;
+        color: #1f5dbf;
+        font-size: .8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+
+    .module-item h3 {
+        margin: 4px 0;
+        font-size: 1.02rem;
+    }
+
+    .module-item p {
+        margin: 0;
+        color: var(--muted);
+    }
+
+    .module-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .students-scroll {
+        max-height: 640px;
+        overflow: auto;
+        display: grid;
+        gap: 10px;
+        padding-right: 4px;
+    }
+
+    .lagging-card {
+        border: 1px solid #cddaf0;
+        background: linear-gradient(180deg, #f7faff 0%, #eef4ff 100%);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .lagging-card h3 {
+        margin: 0 0 2px;
+        font-size: .96rem;
+        color: #14479f;
+    }
+
+    .lagging-card p {
+        margin: 0 0 8px;
+        font-size: .82rem;
+        color: #506182;
+    }
+
+    .lagging-table thead th {
+        border-bottom: 1px solid #cbd8ee;
+        color: #274d8f;
+        font-size: .76rem;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+    }
+
+    .lagging-table td {
+        color: #233457;
+        vertical-align: middle;
+    }
+
+    .student-item {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        background: #fff;
+    }
+
+    .student-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+    }
+
+    .student-top strong {
+        font-size: .95rem;
+        word-break: break-word;
+    }
+
+    .progress-shell {
+        height: 10px;
+        margin: 8px 0 6px;
+        background: #e8edf7;
+    }
+
+    .progress-shell .progress-bar {
+        background: linear-gradient(90deg, #00a6a6 0%, #2d7df0 100%);
+    }
+
+    .student-meta {
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: .86rem;
+    }
+
+    .ok-note {
+        margin: 0;
+        color: #0b7a45;
+        font-size: .86rem;
+        font-weight: 600;
+    }
+
+    details > summary {
+        cursor: pointer;
+        color: #2159b7;
+        font-weight: 600;
+        font-size: .9rem;
+    }
+
+    .missing-list {
+        margin: 8px 0 0;
+        padding-left: 20px;
+    }
+
+    .missing-list li {
+        color: #394a67;
+        margin-bottom: 4px;
+        font-size: .9rem;
+    }
+
+    .empty-panel {
+        border: 1px dashed var(--line);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        color: var(--muted);
+        background: #fcfdff;
+    }
+
+    @@media (max-width: 992px) {
+        .hero-card {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-actions {
+            min-width: 0;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .admin-modules-page {
+            margin-top: 16px;
+            padding: 0 12px;
+        }
+
+        .hero-card {
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .hero-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .module-item {
+            flex-direction: column;
+        }
+    }
+</style>

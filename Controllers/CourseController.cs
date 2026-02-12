@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using RoboticCoders.Data;
 using RoboticCoders.Models;
 using RoboticCoders.ViewModels.Student;
@@ -9,10 +10,12 @@ namespace RoboticCoders.Controllers
     public class CourseController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CourseController(ApplicationDbContext context)
+        public CourseController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // 📚 Listado público de cursos
@@ -58,12 +61,37 @@ namespace RoboticCoders.Controllers
             if (idx >= 0 && idx < lessonsOrdered.Count - 1)
                 nextId = lessonsOrdered[idx + 1].Id;
 
+            var course = await _context.Courses
+                .Where(c => c.Id == courseId)
+                .Include(c => c.Modules)
+                    .ThenInclude(m => m.Lessons)
+                .FirstOrDefaultAsync();
+
+            var user = await _userManager.GetUserAsync(User);
+            var completedIds = new HashSet<int>();
+            if (user != null)
+            {
+                var completedList = await _context.StudentLessonProgresses
+                    .Where(p => p.UserId == user.Id && p.IsCompleted && p.Lesson.Module.CourseId == courseId)
+                    .Select(p => p.LessonId)
+                    .ToListAsync();
+
+                completedIds = completedList.ToHashSet();
+            }
+
+            var totalLessons = lessonsOrdered.Count;
+            var progressPercent = totalLessons == 0 ? 0 : (completedIds.Count * 100) / totalLessons;
+
             var vm = new StudentLessonViewModel
             {
                 Lesson = lesson,
                 NextLessonId = nextId,
                 IsCompleted = false,
-                CourseId = courseId
+                CourseId = courseId,
+                Course = course,
+                Modules = course?.Modules.OrderBy(m => m.Id).ToList() ?? new List<Module>(),
+                CompletedLessonIds = completedIds,
+                ProgressPercent = progressPercent
             };
 
             return View("../Student/Lesson", vm);

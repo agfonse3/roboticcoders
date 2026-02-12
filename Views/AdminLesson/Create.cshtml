@@ -1,30 +1,32 @@
+@model RoboticCoders.Models.Lesson
 @{
-    ViewData["Title"] = "Nueva lección";
+    ViewData["Title"] = "Nueva leccion";
 }
 
-<h2>📘 Nueva lección</h2>
+<h2>Nueva leccion</h2>
 
 <form method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
     <input type="hidden" name="ModuleId" value="@ViewBag.ModuleId" />
 
     <div class="mb-3">
-        <label>Título</label>
-        <input name="Title" class="form-control" />
+        <label>Titulo</label>
+        <input name="Title" class="form-control" value="@Model?.Title" />
     </div>
 
     <div class="mb-3">
         <label>Contenido</label>
-        <textarea name="Content" class="form-control"></textarea>
+        <textarea name="Content" class="form-control">@Model?.Content</textarea>
     </div>
 
     <div class="mb-3">
         <label>Video (opcional)</label>
-        <input name="VideoUrl" class="form-control" />
+        <input name="VideoUrl" class="form-control" value="@Model?.VideoUrl" />
     </div>
 
     <div class="mb-3">
-        <label>Diapositivas (PDF)</label>
-        <input type="file" name="slides" accept=".pdf" class="form-control" />
+        <label>Diapositivas (PDF, PPT o PPTX)</label>
+        <input type="file" name="slides" accept=".pdf,.ppt,.pptx" class="form-control" />
     </div>
 
     <button class="btn btn-success">Guardar</button>

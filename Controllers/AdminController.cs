@@ -4,30 +4,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoboticCoders.Data;
 using RoboticCoders.Models;
-using RoboticCoders.ViewModels.Admin; 
+using RoboticCoders.ViewModels.Admin;
 
-namespace RoboticCoders.Controllers
-{
-    [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
+namespace RoboticCoders.Controllers;
+
+[Authorize(Roles = "Admin")]
+public class AdminController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly RoleManager<IdentityRole> _roleManager;
 
+    public AdminController(
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        ApplicationDbContext context)
+    {
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _context = context;
+    }
 
-public AdminController(
-    UserManager<ApplicationUser> userManager,
-    RoleManager<IdentityRole> roleManager,
-    ApplicationDbContext context)
-{
-    _userManager = userManager;
-    _roleManager = roleManager;
-    _context = context;
-}
-
-
-   // GET: Editar usuario
     public async Task<IActionResult> EditUser(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -38,54 +35,56 @@ public AdminController(
         return View(new EditUserViewModel
         {
             Id = user.Id,
-            Email = user.Email,
-            Role = roles.FirstOrDefault()
+            Email = user.Email ?? string.Empty,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Address = user.Address,
+            City = user.City,
+            Role = roles.FirstOrDefault() ?? "Estudiante"
         });
     }
 
-    // POST: Editar usuario
-[HttpPost]
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> EditUser(EditUserViewModel model)
-{
-    if (!ModelState.IsValid)
-        return View(model);
-
-    var user = await _userManager.FindByIdAsync(model.Id);
-    if (user == null)
-        return NotFound();
-
-    if (user.Email == "admin@roboticcoders.com")
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditUser(EditUserViewModel model)
     {
-        ModelState.AddModelError("", "No puedes modificar este administrador.");
-        return View(model);
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var user = await _userManager.FindByIdAsync(model.Id);
+        if (user == null)
+            return NotFound();
+
+        if (user.Email == "admin@roboticcoders.com")
+        {
+            ModelState.AddModelError(string.Empty, "No puedes modificar este administrador.");
+            return View(model);
+        }
+
+        user.Email = model.Email;
+        user.UserName = model.Email;
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.Address = model.Address;
+        user.City = model.City;
+        await _userManager.UpdateAsync(user);
+
+        if (!await _roleManager.RoleExistsAsync(model.Role))
+        {
+            ModelState.AddModelError(string.Empty, "El rol seleccionado no existe.");
+            return View(model);
+        }
+
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        if (!currentRoles.Contains(model.Role))
+        {
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _userManager.AddToRoleAsync(user, model.Role);
+        }
+
+        return RedirectToAction(nameof(Dashboard));
     }
 
-    user.Email = model.Email;
-    user.UserName = model.Email;
-
-    await _userManager.UpdateAsync(user);
-
-    if (!await _roleManager.RoleExistsAsync(model.Role))
-    {
-        ModelState.AddModelError("", "El rol seleccionado no existe.");
-        return View(model);
-    }
-
-    var currentRoles = await _userManager.GetRolesAsync(user);
-
-    if (!currentRoles.Contains(model.Role))
-    {
-        await _userManager.RemoveFromRolesAsync(user, currentRoles);
-        await _userManager.AddToRoleAsync(user, model.Role);
-    }
-
-    return RedirectToAction("Dashboard");
-}
-
-
-    // GET: Eliminar usuario
     public async Task<IActionResult> DeleteUser(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -94,55 +93,139 @@ public async Task<IActionResult> EditUser(EditUserViewModel model)
         return View(user);
     }
 
-    // POST: Confirmar eliminación
     [HttpPost, ActionName("DeleteUser")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteUserConfirmed(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
         if (user != null)
             await _userManager.DeleteAsync(user);
 
-        return RedirectToAction("Dashboard");
+        return RedirectToAction(nameof(Dashboard));
     }
-    // ================= DASHBOARD =================
+
     public async Task<IActionResult> Dashboard()
     {
         var courses = await _context.Courses
             .Include(c => c.Modules)
                 .ThenInclude(m => m.Lessons)
+            .Include(c => c.TeacherAssignments)
+                .ThenInclude(a => a.Teacher)
             .ToListAsync();
 
         ViewBag.Courses = courses;
-        
-        var users = _userManager.Users.ToList();
+
+        var lessonCounts = courses.ToDictionary(
+            c => c.Id,
+            c => c.Modules.SelectMany(m => m.Lessons).Count());
+
+        var teacherAssignments = courses
+            .SelectMany(c => c.TeacherAssignments.Select(a => new
+            {
+                CourseId = c.Id,
+                TeacherId = a.TeacherId,
+                TeacherEmail = a.Teacher.Email ?? "(sin correo)"
+            }))
+            .ToList();
+
+        var teacherCompletions = await _context.StudentLessonProgresses
+            .Where(p => p.IsCompleted)
+            .Select(p => new
+            {
+                p.UserId,
+                CourseId = p.Lesson.Module.CourseId
+            })
+            .GroupBy(x => new { x.CourseId, x.UserId })
+            .Select(g => new
+            {
+                g.Key.CourseId,
+                g.Key.UserId,
+                Completed = g.Count()
+            })
+            .ToListAsync();
+
+        var completionMap = teacherCompletions.ToDictionary(
+            x => (x.CourseId, x.UserId),
+            x => x.Completed);
+
+        var progressByCourse = new Dictionary<int, List<AdminTeacherCourseProgressViewModel>>();
+        foreach (var ta in teacherAssignments)
+        {
+            var total = lessonCounts.TryGetValue(ta.CourseId, out var count) ? count : 0;
+            var completed = completionMap.TryGetValue((ta.CourseId, ta.TeacherId), out var done) ? done : 0;
+            var percent = total == 0 ? 0 : (completed * 100) / total;
+
+            if (!progressByCourse.TryGetValue(ta.CourseId, out var values))
+            {
+                values = new List<AdminTeacherCourseProgressViewModel>();
+                progressByCourse[ta.CourseId] = values;
+            }
+
+            values.Add(new AdminTeacherCourseProgressViewModel
+            {
+                TeacherId = ta.TeacherId,
+                TeacherEmail = ta.TeacherEmail,
+                CompletedLessons = completed,
+                TotalLessons = total,
+                ProgressPercent = percent
+            });
+        }
+
+        ViewBag.TeacherProgressByCourse = progressByCourse;
+
+        var users = await _userManager.Users.ToListAsync();
         var model = new List<AdminUserViewModel>();
+
+        var teacherCourses = await _context.CourseTeacherAssignments
+            .Include(x => x.Course)
+            .GroupBy(x => x.TeacherId)
+            .ToDictionaryAsync(
+                g => g.Key,
+                g => g.Select(x => x.Course.Title).Distinct().OrderBy(t => t).ToList());
+
+        var legacyTeacherCourses = await _context.Courses
+            .Where(c => c.TeacherId != null)
+            .Select(c => new { TeacherId = c.TeacherId!, c.Title })
+            .ToListAsync();
+
+        foreach (var legacy in legacyTeacherCourses)
+        {
+            if (!teacherCourses.TryGetValue(legacy.TeacherId, out var titles))
+            {
+                titles = new List<string>();
+                teacherCourses[legacy.TeacherId] = titles;
+            }
+
+            if (!titles.Contains(legacy.Title))
+                titles.Add(legacy.Title);
+        }
 
         foreach (var user in users)
         {
             var roles = await _userManager.GetRolesAsync(user);
-
             model.Add(new AdminUserViewModel
             {
                 Id = user.Id,
-                Email = user.Email!,
+                Email = user.Email ?? string.Empty,
+                FullName = $"{user.FirstName} {user.LastName}".Trim(),
+                City = user.City,
                 Role = roles.FirstOrDefault() ?? "Sin rol"
             });
         }
 
+        ViewBag.TeacherCoursesByUserId = teacherCourses;
         return View(model);
     }
 
-    // ================= CREAR CURSO =================
     [HttpGet]
     public async Task<IActionResult> CreateCourse()
     {
-        var teachers = await _userManager.GetUsersInRoleAsync("Docente");
-
-        ViewBag.Teachers = teachers;
+        ViewBag.Teachers = await _userManager.GetUsersInRoleAsync("Docente");
         return View();
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateCourse(CreateCourseViewModel model)
     {
         if (!ModelState.IsValid)
@@ -156,26 +239,19 @@ public async Task<IActionResult> EditUser(EditUserViewModel model)
             Title = model.Title,
             Description = model.Description,
             ImageUrl = model.ImageUrl
-            // TeacherId se asignará luego en ManageCourse
         };
 
         _context.Courses.Add(course);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("ManageCourse", new { id = course.Id });
+        return RedirectToAction(nameof(ManageCourse), new { id = course.Id });
     }
 
-
-
-    // 👉 Crear usuario
-    // ================= REGISTER (SOLO ADMIN) =================
     [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
+    public IActionResult Register() => View();
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid)
@@ -184,23 +260,30 @@ public async Task<IActionResult> EditUser(EditUserViewModel model)
         var user = new ApplicationUser
         {
             UserName = model.Email,
-            Email = model.Email
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Address = model.Address,
+            City = model.City
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
-
         if (!result.Succeeded)
         {
             foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+                ModelState.AddModelError(string.Empty, error.Description);
 
             return View(model);
         }
 
-        return RedirectToAction("Dashboard");
+        if (await _roleManager.RoleExistsAsync(model.Role))
+            await _userManager.AddToRoleAsync(user, model.Role);
+        else
+            await _userManager.AddToRoleAsync(user, "Estudiante");
+
+        return RedirectToAction(nameof(Dashboard));
     }
 
-    // 👉 Asignar estudiantes a un curso
     [HttpGet]
     public async Task<IActionResult> AssignStudents(int courseId)
     {
@@ -208,7 +291,6 @@ public async Task<IActionResult> EditUser(EditUserViewModel model)
         if (course == null) return NotFound();
 
         var students = await _userManager.GetUsersInRoleAsync("Estudiante");
-
         var enrolled = await _context.CourseEnrollments
             .Where(e => e.CourseId == courseId)
             .Select(e => e.UserId)
@@ -222,6 +304,7 @@ public async Task<IActionResult> EditUser(EditUserViewModel model)
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AssignStudents(int courseId, string[]? selectedStudentIds)
     {
         var course = await _context.Courses.FindAsync(courseId);
@@ -229,105 +312,223 @@ public async Task<IActionResult> EditUser(EditUserViewModel model)
 
         selectedStudentIds ??= Array.Empty<string>();
 
-        // existing enrollments
         var existing = await _context.CourseEnrollments
             .Where(e => e.CourseId == courseId)
             .ToListAsync();
 
-        // remove enrollments not selected
-        var toRemove = existing.Where(e => !selectedStudentIds.Contains(e.UserId)).ToList();
-        if (toRemove.Any())
-            _context.CourseEnrollments.RemoveRange(toRemove);
+        _context.CourseEnrollments.RemoveRange(existing);
 
-        // add new enrollments
-        var existingIds = existing.Select(e => e.UserId).ToHashSet();
-        var toAdd = selectedStudentIds.Where(id => !existingIds.Contains(id))
+        var toAdd = selectedStudentIds.Distinct()
             .Select(id => new CourseEnrollment { CourseId = courseId, UserId = id })
             .ToList();
 
-        if (toAdd.Any())
+        if (toAdd.Count > 0)
             _context.CourseEnrollments.AddRange(toAdd);
 
         await _context.SaveChangesAsync();
 
-        TempData["Message"] = "Asignaciones actualizadas";
-        return RedirectToAction("Dashboard");
+        TempData["Message"] = "Asignaciones actualizadas.";
+        return RedirectToAction(nameof(Dashboard));
     }
 
-    // 👉 Gestionar curso (asignar docente y estudiantes)
-  [HttpGet]
-public async Task<IActionResult> ManageCourse(int id)
-{
-    var course = await _context.Courses
-        .Include(c => c.Modules)
-            .ThenInclude(m => m.Lessons)
-        .FirstOrDefaultAsync(c => c.Id == id);
+    [HttpGet]
+    public async Task<IActionResult> ManageCourse(int id)
+    {
+        var model = await BuildManageCourseViewModel(id);
+        if (model == null) return NotFound();
 
-    if (course == null)
-        return NotFound();
-
-    ViewBag.Course = course;
-
-    ViewBag.Teachers = await _userManager.GetUsersInRoleAsync("Teacher");
-    ViewBag.Students = await _userManager.GetUsersInRoleAsync("Student");
-
-    ViewBag.AssignedTeacherId = course.TeacherId;
-
-    ViewBag.EnrolledStudentIds = await _context.CourseEnrollments
-        .Where(cs => cs.CourseId == id)
-        .Select(cs => cs.UserId)
-        .ToListAsync();
-
-    return View();
-}
-
+        return View(model);
+    }
 
     [HttpPost]
-    public async Task<IActionResult> ManageCourse(int id, string? selectedTeacherId, string[]? selectedStudentIds)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ManageCourse(
+        int id,
+        List<string>? selectedTeacherIds,
+        Dictionary<string, string>? studentTeacherAssignments)
     {
         var course = await _context.Courses.FindAsync(id);
         if (course == null) return NotFound();
 
-        // Diagnostic logging to help debug enrollment binding
-        Console.WriteLine($"[ManageCourse] courseId={id} selectedTeacherId={selectedTeacherId}");
-        if (selectedStudentIds == null)
+        selectedTeacherIds ??= new List<string>();
+        selectedTeacherIds = selectedTeacherIds
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct()
+            .ToList();
+
+        var teachers = await _userManager.GetUsersInRoleAsync("Docente");
+        var teacherIdSet = teachers.Select(t => t.Id).ToHashSet();
+
+        if (selectedTeacherIds.Any(tid => !teacherIdSet.Contains(tid)))
         {
-            Console.WriteLine("[ManageCourse] selectedStudentIds = null");
-        }
-        else
-        {
-            Console.WriteLine($"[ManageCourse] selectedStudentIds ({selectedStudentIds.Length}) = {string.Join(",", selectedStudentIds)}");
+            ModelState.AddModelError(string.Empty, "Hay docentes seleccionados que no son válidos.");
+            var invalidModel = await BuildManageCourseViewModel(id, selectedTeacherIds, studentTeacherAssignments);
+            return View(invalidModel);
         }
 
-        // Asignar docente
-        course.TeacherId = selectedTeacherId;
+        studentTeacherAssignments ??= new Dictionary<string, string>();
 
-        // Actualizar inscritos
-        selectedStudentIds ??= Array.Empty<string>();
-        var existing = await _context.CourseEnrollments
+        var validStudents = await _userManager.GetUsersInRoleAsync("Estudiante");
+        var validStudentIds = validStudents.Select(s => s.Id).ToHashSet();
+
+        var normalizedAssignments = studentTeacherAssignments
+            .Where(x => validStudentIds.Contains(x.Key))
+            .Where(x => !string.IsNullOrWhiteSpace(x.Value))
+            .Select(x => new { StudentId = x.Key, TeacherId = x.Value })
+            .Where(x => teacherIdSet.Contains(x.TeacherId))
+            .GroupBy(x => x.StudentId)
+            .Select(g => g.First())
+            .ToList();
+
+        // Keep teacher list in sync with actual assignments so assignments are not lost
+        // when admin sets a teacher in section 2 but forgets to check section 1.
+        selectedTeacherIds = selectedTeacherIds
+            .Union(normalizedAssignments.Select(x => x.TeacherId))
+            .Distinct()
+            .ToList();
+
+        var existingTeacherAssignments = await _context.CourseTeacherAssignments
+            .Where(x => x.CourseId == id)
+            .ToListAsync();
+
+        var removedTeacherAssignmentIds = existingTeacherAssignments
+            .Where(x => !selectedTeacherIds.Contains(x.TeacherId))
+            .Select(x => x.Id)
+            .ToList();
+
+        if (removedTeacherAssignmentIds.Count > 0)
+        {
+            var enrollmentsForRemovedTeachers = await _context.CourseEnrollments
+                .Where(e => e.CourseId == id && e.CourseTeacherAssignmentId.HasValue)
+                .Where(e => removedTeacherAssignmentIds.Contains(e.CourseTeacherAssignmentId ?? 0))
+                .ToListAsync();
+
+            _context.CourseEnrollments.RemoveRange(enrollmentsForRemovedTeachers);
+            _context.CourseTeacherAssignments.RemoveRange(existingTeacherAssignments.Where(x => removedTeacherAssignmentIds.Contains(x.Id)));
+        }
+
+        var existingTeacherIds = existingTeacherAssignments.Select(x => x.TeacherId).ToHashSet();
+        var newTeacherAssignments = selectedTeacherIds
+            .Where(tid => !existingTeacherIds.Contains(tid))
+            .Select(tid => new CourseTeacherAssignment
+            {
+                CourseId = id,
+                TeacherId = tid
+            })
+            .ToList();
+
+        if (newTeacherAssignments.Count > 0)
+            _context.CourseTeacherAssignments.AddRange(newTeacherAssignments);
+
+        await _context.SaveChangesAsync();
+
+        var teacherAssignmentsByTeacherId = await _context.CourseTeacherAssignments
+            .Where(x => x.CourseId == id)
+            .ToDictionaryAsync(x => x.TeacherId, x => x.Id);
+
+        var existingEnrollments = await _context.CourseEnrollments
             .Where(e => e.CourseId == id)
             .ToListAsync();
 
-        Console.WriteLine($"[ManageCourse] existing enrollments count = {existing.Count}");
+        _context.CourseEnrollments.RemoveRange(existingEnrollments);
 
-        var toRemove = existing.Where(e => !selectedStudentIds.Contains(e.UserId)).ToList();
-        if (toRemove.Any())
-            _context.CourseEnrollments.RemoveRange(toRemove);
-
-        var existingIds = existing.Select(e => e.UserId).ToHashSet();
-        var toAdd = selectedStudentIds.Where(sid => !existingIds.Contains(sid))
-            .Select(sid => new CourseEnrollment { CourseId = id, UserId = sid })
+        var desiredEnrollments = normalizedAssignments
+            .Where(x => teacherAssignmentsByTeacherId.ContainsKey(x.TeacherId))
+            .Select(x => new CourseEnrollment
+            {
+                CourseId = id,
+                UserId = x.StudentId,
+                CourseTeacherAssignmentId = teacherAssignmentsByTeacherId[x.TeacherId]
+            })
             .ToList();
 
-        if (toAdd.Any())
-            _context.CourseEnrollments.AddRange(toAdd);
+        if (desiredEnrollments.Count > 0)
+            _context.CourseEnrollments.AddRange(desiredEnrollments);
 
+        course.TeacherId = selectedTeacherIds.FirstOrDefault();
         _context.Courses.Update(course);
+
         await _context.SaveChangesAsync();
 
-        TempData["Message"] = "Curso configurado exitosamente";
-        return RedirectToAction("Dashboard");
+        TempData["Message"] = "Curso configurado correctamente.";
+        return RedirectToAction(nameof(Dashboard));
     }
+
+    private async Task<ManageCourseViewModel?> BuildManageCourseViewModel(
+        int courseId,
+        IEnumerable<string>? selectedTeacherIds = null,
+        IDictionary<string, string>? selectedAssignments = null)
+    {
+        var course = await _context.Courses
+            .Include(c => c.Modules)
+                .ThenInclude(m => m.Lessons)
+            .FirstOrDefaultAsync(c => c.Id == courseId);
+
+        if (course == null) return null;
+
+        var teacherAssignments = await _context.CourseTeacherAssignments
+            .Where(x => x.CourseId == courseId)
+            .ToListAsync();
+
+        var teacherIdList = (selectedTeacherIds ?? teacherAssignments.Select(x => x.TeacherId))
+            .Distinct()
+            .ToList();
+
+        var enrollments = await _context.CourseEnrollments
+            .Where(e => e.CourseId == courseId)
+            .Include(e => e.CourseTeacherAssignment)
+            .ToListAsync();
+
+        var persistedAssignments = enrollments
+            .Where(e => e.CourseTeacherAssignment?.TeacherId != null)
+            .GroupBy(e => e.UserId)
+            .ToDictionary(g => g.Key, g => g.First().CourseTeacherAssignment!.TeacherId);
+
+        var assignmentMap = new Dictionary<string, string?>();
+        foreach (var pair in persistedAssignments)
+            assignmentMap[pair.Key] = pair.Value;
+
+        if (selectedAssignments != null)
+        {
+            foreach (var pair in selectedAssignments)
+                assignmentMap[pair.Key] = string.IsNullOrWhiteSpace(pair.Value) ? null : pair.Value;
+        }
+
+        var students = await _userManager.GetUsersInRoleAsync("Estudiante");
+        var teachers = await _userManager.GetUsersInRoleAsync("Docente");
+
+        var totalLessons = course.Modules.SelectMany(m => m.Lessons).Count();
+        var studentProgress = await _context.StudentLessonProgresses
+            .Where(p => p.IsCompleted && p.Lesson.Module.CourseId == courseId)
+            .GroupBy(p => p.UserId)
+            .Select(g => new { UserId = g.Key, Completed = g.Count() })
+            .ToDictionaryAsync(x => x.UserId, x => x.Completed);
+
+        return new ManageCourseViewModel
+        {
+            CourseId = course.Id,
+            CourseTitle = course.Title,
+            SelectedTeacherIds = teacherIdList,
+            Teachers = teachers.OrderBy(t => t.Email).ToList(),
+            Students = students
+                .OrderBy(s => s.Email)
+                .Select(student =>
+                {
+                    var completed = studentProgress.TryGetValue(student.Id, out var value) ? value : 0;
+                    var percent = totalLessons == 0 ? 0 : (completed * 100) / totalLessons;
+
+                    return new StudentTeacherAssignmentOptionViewModel
+                    {
+                        StudentId = student.Id,
+                        StudentEmail = student.Email ?? "(sin correo)",
+                        AssignedTeacherId = assignmentMap.TryGetValue(student.Id, out var tid) ? tid : null,
+                        ProgressPercent = percent
+                    };
+                })
+                .ToList()
+        };
+    }
+
     [HttpGet]
     public async Task<IActionResult> ExportStudentsCSV(int courseId)
     {
@@ -337,6 +538,8 @@ public async Task<IActionResult> ManageCourse(int id)
         var enrollments = await _context.CourseEnrollments
             .Where(e => e.CourseId == courseId)
             .Include(e => e.User)
+            .Include(e => e.CourseTeacherAssignment)
+                .ThenInclude(a => a!.Teacher)
             .ToListAsync();
 
         var totalLessons = await _context.Modules
@@ -345,7 +548,7 @@ public async Task<IActionResult> ManageCourse(int id)
             .CountAsync();
 
         var csvBuilder = new System.Text.StringBuilder();
-        csvBuilder.AppendLine("Email,Lecciones Completadas,Total Lecciones,Progreso (porcentaje)");
+        csvBuilder.AppendLine("Email Estudiante,Docente,Lecciones Completadas,Total Lecciones,Progreso (porcentaje)");
 
         foreach (var e in enrollments)
         {
@@ -354,7 +557,8 @@ public async Task<IActionResult> ManageCourse(int id)
                 .CountAsync();
 
             var percent = totalLessons > 0 ? (completed * 100) / totalLessons : 0;
-            csvBuilder.AppendLine($"\"{e.User?.Email}\",{completed},{totalLessons},{percent}");
+            var teacherEmail = e.CourseTeacherAssignment?.Teacher?.Email ?? "Sin docente";
+            csvBuilder.AppendLine($"\"{e.User?.Email}\",\"{teacherEmail}\",{completed},{totalLessons},{percent}");
         }
 
         var bytes = System.Text.Encoding.UTF8.GetBytes(csvBuilder.ToString());
@@ -362,17 +566,16 @@ public async Task<IActionResult> ManageCourse(int id)
         return File(bytes, "text/csv", $"estudiantes_{sanitizedTitle}_{DateTime.Now:yyyyMMdd}.csv");
     }
 
-    // Diagnostic: list all enrollments (admin only)
     [HttpGet]
     public async Task<IActionResult> Enrollments()
     {
         var enrollments = await _context.CourseEnrollments
             .Include(e => e.Course)
             .Include(e => e.User)
+            .Include(e => e.CourseTeacherAssignment)
+                .ThenInclude(a => a!.Teacher)
             .ToListAsync();
 
         return View(enrollments);
     }
-    }
 }
-

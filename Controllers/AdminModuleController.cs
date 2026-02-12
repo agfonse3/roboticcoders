@@ -16,7 +16,7 @@ namespace RoboticCoders.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Create(int courseId)
+        public IActionResult Create(int courseId)
         {
             ViewBag.CourseId = courseId;
             return View();
@@ -55,10 +55,10 @@ namespace RoboticCoders.Controllers
             return RedirectToAction("Modules", "AdminCourse", new { id = existing.CourseId });
         }
 
-        public async Task<IActionResult> Lessons(int id)
+       public async Task<IActionResult> Lessons(int id)
         {
             var module = await _context.Modules
-                .Include(m => m.Lessons)
+                .Include(m => m.Lessons.OrderBy(l => l.Id))
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (module == null) return NotFound();

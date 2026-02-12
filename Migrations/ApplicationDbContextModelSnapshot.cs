@@ -163,6 +163,12 @@ namespace RoboticCoders.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -173,6 +179,14 @@ namespace RoboticCoders.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -260,17 +274,48 @@ namespace RoboticCoders.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CourseTeacherAssignmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseTeacherAssignmentId");
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("CourseId", "UserId")
+                        .IsUnique();
+
                     b.ToTable("CourseEnrollments");
+                });
+
+            modelBuilder.Entity("RoboticCoders.Models.CourseTeacherAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
+
+                    b.HasIndex("CourseId", "TeacherId")
+                        .IsUnique();
+
+                    b.ToTable("CourseTeacherAssignments");
                 });
 
             modelBuilder.Entity("RoboticCoders.Models.Lesson", b =>
@@ -425,6 +470,11 @@ namespace RoboticCoders.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RoboticCoders.Models.CourseTeacherAssignment", "CourseTeacherAssignment")
+                        .WithMany("StudentEnrollments")
+                        .HasForeignKey("CourseTeacherAssignmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("RoboticCoders.Models.ApplicationUser", "User")
                         .WithMany("Enrollments")
                         .HasForeignKey("UserId")
@@ -433,7 +483,28 @@ namespace RoboticCoders.Migrations
 
                     b.Navigation("Course");
 
+                    b.Navigation("CourseTeacherAssignment");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RoboticCoders.Models.CourseTeacherAssignment", b =>
+                {
+                    b.HasOne("RoboticCoders.Models.Course", "Course")
+                        .WithMany("TeacherAssignments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RoboticCoders.Models.ApplicationUser", "Teacher")
+                        .WithMany("TeacherAssignments")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("RoboticCoders.Models.Lesson", b =>
@@ -481,6 +552,8 @@ namespace RoboticCoders.Migrations
                 {
                     b.Navigation("Enrollments");
 
+                    b.Navigation("TeacherAssignments");
+
                     b.Navigation("TeachingCourses");
                 });
 
@@ -489,6 +562,13 @@ namespace RoboticCoders.Migrations
                     b.Navigation("Enrollments");
 
                     b.Navigation("Modules");
+
+                    b.Navigation("TeacherAssignments");
+                });
+
+            modelBuilder.Entity("RoboticCoders.Models.CourseTeacherAssignment", b =>
+                {
+                    b.Navigation("StudentEnrollments");
                 });
 
             modelBuilder.Entity("RoboticCoders.Models.Module", b =>

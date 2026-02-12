@@ -1,8 +1,7 @@
-namespace RoboticCoders.ViewModels.Teacher
+namespace RoboticCoders.ViewModels.Teacher;
+
+public class TeacherProgressViewModel
 {
-    public class TeacherProgressViewModel
-    {
-        public string StudentEmail { get; set; } = string.Empty;
-        public int CompletedLessons { get; set; }
-    }
+    public string StudentEmail { get; set; } = string.Empty;
+    public int CompletedLessons { get; set; }
 }

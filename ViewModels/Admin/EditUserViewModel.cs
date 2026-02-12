@@ -1,16 +1,24 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace RoboticCoders.ViewModels.Admin
+namespace RoboticCoders.ViewModels.Admin;
+
+public class EditUserViewModel
 {
-    public class EditUserViewModel
-    {
-        public string Id { get; set; }
+    [Required]
+    public string Id { get; set; } = string.Empty;
 
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+    [Required, EmailAddress]
+    public string Email { get; set; } = string.Empty;
 
-        [Required]
-        public string Role { get; set; }
-    }
+    [Required]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Required]
+    public string LastName { get; set; } = string.Empty;
+
+    public string? Address { get; set; }
+    public string? City { get; set; }
+
+    [Required]
+    public string Role { get; set; } = "Estudiante";
 }

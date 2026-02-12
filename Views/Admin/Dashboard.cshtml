@@ -1,38 +1,37 @@
 @using RoboticCoders.Models
-@model List<AdminUserViewModel>
+@using RoboticCoders.ViewModels.Admin
+@model List<RoboticCoders.ViewModels.Admin.AdminUserViewModel>
 
 @{
-    ViewData["Title"] = "Panel de Administración";
+    ViewData["Title"] = "Panel de Administracion";
+    var teacherProgressByCourse = ViewBag.TeacherProgressByCourse as Dictionary<int, List<AdminTeacherCourseProgressViewModel>> ?? new Dictionary<int, List<AdminTeacherCourseProgressViewModel>>();
+    var teacherCoursesByUserId = ViewBag.TeacherCoursesByUserId as Dictionary<string, List<string>> ?? new Dictionary<string, List<string>>();
 }
 
 <div class="admin-container">
-
-    <!-- ================= HEADER ================= -->
     <div class="admin-header">
         <div>
-            <h2>📊 Panel de Administración</h2>
-            <p class="admin-subtitle">
-                Gestión de cursos, docentes y estudiantes
-            </p>
+            <h2>Panel de Administracion</h2>
+            <p class="admin-subtitle">Gestion de cursos, docentes y estudiantes</p>
         </div>
 
         <div class="admin-actions">
-            <a class="btn btn-success" asp-action="Register">➕ Usuario</a>
-            <a class="btn btn-primary" asp-action="CreateCourse">➕ Curso</a>
+            <a class="btn btn-success" asp-action="Register">Nuevo usuario</a>
+            <a class="btn btn-primary" asp-action="CreateCourse">Nuevo curso</a>
         </div>
     </div>
 
-    <!-- ================= CURSOS ================= -->
     <div class="admin-card">
-        <h3 class="section-title">📦 Cursos</h3>
+        <h3 class="section-title">Cursos</h3>
 
         <div class="table-responsive">
             <table class="admin-table">
                 <thead>
                     <tr>
                         <th>Curso</th>
-                        <th>Docente</th>
-                        <th>Módulos</th>
+                        <th>Docentes</th>
+                        <th>Progreso docente (solo admin)</th>
+                        <th>Modulos</th>
                         <th>Lecciones</th>
                         <th>Acciones</th>
                     </tr>
@@ -45,23 +44,110 @@
                             foreach (var course in courses)
                             {
                                 var totalLessons = course.Modules.Sum(m => m.Lessons.Count);
+                                var teacherEmails = course.TeacherAssignments
+                                    .Select(a => a.Teacher?.Email ?? "(sin correo)")
+                                    .Distinct()
+                                    .ToList();
+                                var progressRows = teacherProgressByCourse.TryGetValue(course.Id, out var rows)
+                                    ? rows.OrderBy(r => r.TeacherEmail).ToList()
+                                    : new List<AdminTeacherCourseProgressViewModel>();
+                                var avgProgress = progressRows.Count == 0 ? 0 : (int)Math.Round(progressRows.Average(r => r.ProgressPercent));
+
                                 <tr>
+                                    <td><strong>@course.Title</strong></td>
                                     <td>
-                                        <strong>@course.Title</strong>
+                                        @if (teacherEmails.Count == 0)
+                                        {
+                                            <span>Sin asignar</span>
+                                        }
+                                        else
+                                        {
+                                            <div class="teacher-summary">
+                                                <span class="teacher-count">@teacherEmails.Count docentes</span>
+                                                <small>@string.Join(", ", teacherEmails.Take(3))@(teacherEmails.Count > 3 ? ", ..." : "")</small>
+                                            </div>
+                                        }
                                     </td>
                                     <td>
-                                        @(string.IsNullOrEmpty(course.TeacherId)
-                                            ? "Sin asignar"
-                                            : course.TeacherId)
+                                        @if (progressRows.Any())
+                                        {
+                                            <div class="progress-summary">
+                                                <span>Promedio: <strong>@avgProgress%</strong></span>
+                                                <span class="text-muted">(@progressRows.Count docentes)</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span>Sin progreso</span>
+                                        }
                                     </td>
                                     <td>@course.Modules.Count</td>
                                     <td>@totalLessons</td>
                                     <td class="actions">
-                                        <a asp-action="ManageCourse"
-                                           asp-route-id="@course.Id"
-                                           class="btn-icon settings">
-                                            ⚙️
-                                        </a>
+                                        <a asp-action="ManageCourse" asp-route-id="@course.Id" class="btn-icon settings">Configurar</a>
+                                        <button type="button"
+                                                class="btn-icon settings ms-1"
+                                                data-toggle-progress="@course.Id">
+                                            Ver docentes
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr class="course-progress-row d-none" id="course-progress-@course.Id">
+                                    <td colspan="6">
+                                        <div class="course-progress-panel">
+                                            @if (progressRows.Any())
+                                            {
+                                                <div class="course-progress-tools">
+                                                    <input type="text"
+                                                           class="form-control form-control-sm"
+                                                           placeholder="Buscar docente por email..."
+                                                           data-search-progress="@course.Id" />
+
+                                                    <select class="form-select form-select-sm" data-sort-progress="@course.Id">
+                                                        <option value="progress-asc">Menor progreso</option>
+                                                        <option value="progress-desc">Mayor progreso</option>
+                                                        <option value="email-asc">Email A-Z</option>
+                                                        <option value="email-desc">Email Z-A</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="table-responsive course-progress-table-wrap">
+                                                    <table class="admin-table admin-table-sm" data-progress-table="@course.Id">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Docente</th>
+                                                                <th>Completadas</th>
+                                                                <th>Total</th>
+                                                                <th>Progreso</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var row in progressRows)
+                                                            {
+                                                                <tr data-teacher="@row.TeacherEmail.ToLowerInvariant()" data-progress="@row.ProgressPercent">
+                                                                    <td>@row.TeacherEmail</td>
+                                                                    <td>@row.CompletedLessons</td>
+                                                                    <td>@row.TotalLessons</td>
+                                                                    <td>
+                                                                        <div class="tiny-progress">
+                                                                            <span>@row.ProgressPercent%</span>
+                                                                            <div class="progress" style="height:6px;">
+                                                                                <div class="progress-bar" style="width:@row.ProgressPercent%"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="empty">No hay docentes con progreso en este curso.</div>
+                                            }
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -69,9 +155,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="5" class="empty">
-                                    No hay cursos creados
-                                </td>
+                                <td colspan="6" class="empty">No hay cursos creados</td>
                             </tr>
                         }
                     }
@@ -80,15 +164,17 @@
         </div>
     </div>
 
-    <!-- ================= USUARIOS ================= -->
     <div class="admin-card">
-        <h3 class="section-title">👥 Usuarios</h3>
+        <h3 class="section-title">Usuarios</h3>
 
         <table class="admin-table">
             <thead>
                 <tr>
                     <th>Email</th>
+                    <th>Nombre</th>
+                    <th>Ciudad</th>
                     <th>Rol</th>
+                    <th>Cursos activos</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -97,25 +183,148 @@
                 {
                     <tr>
                         <td>@user.Email</td>
+                        <td>@(string.IsNullOrWhiteSpace(user.FullName) ? "-" : user.FullName)</td>
+                        <td>@(string.IsNullOrWhiteSpace(user.City) ? "-" : user.City)</td>
+                        <td><span class="role-badge">@user.Role</span></td>
                         <td>
-                            <span class="role-badge">@user.Role</span>
+                            @if (user.Role == "Docente" && teacherCoursesByUserId.TryGetValue(user.Id, out var activeCourses) && activeCourses.Any())
+                            {
+                                @string.Join(", ", activeCourses.OrderBy(x => x))
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
                         </td>
                         <td class="actions">
-                            <a asp-action="EditUser"
-                               asp-route-id="@user.Id"
-                               class="btn-icon edit">
-                                ✏️
-                            </a>
-                            <a asp-action="DeleteUser"
-                               asp-route-id="@user.Id"
-                               class="btn-icon delete">
-                                🗑️
-                            </a>
+                            <a asp-action="EditUser" asp-route-id="@user.Id" class="btn-icon edit">Editar</a>
+                            <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn-icon delete">Eliminar</a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
-
 </div>
+
+<style>
+    .teacher-summary {
+        display: grid;
+        gap: 2px;
+    }
+
+    .teacher-count {
+        font-weight: 600;
+    }
+
+    .progress-summary {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .course-progress-panel {
+        background: #f7faff;
+        border: 1px solid #dae5f6;
+        border-radius: 10px;
+        padding: 12px;
+    }
+
+    .course-progress-tools {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .course-progress-table-wrap {
+        max-height: 280px;
+        overflow: auto;
+    }
+
+    .admin-table-sm th,
+    .admin-table-sm td {
+        padding: 8px 10px;
+        font-size: .9rem;
+    }
+
+    .admin-table-sm thead th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 1;
+    }
+
+    .tiny-progress {
+        min-width: 140px;
+    }
+
+    .tiny-progress span {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    @@media (max-width: 920px) {
+        .course-progress-tools {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    (() => {
+        const toggleButtons = document.querySelectorAll('[data-toggle-progress]');
+        toggleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const courseId = btn.getAttribute('data-toggle-progress');
+                const row = document.getElementById(`course-progress-${courseId}`);
+                if (!row) return;
+                row.classList.toggle('d-none');
+            });
+        });
+
+        const applyFilters = (courseId) => {
+            const table = document.querySelector(`[data-progress-table="${courseId}"] tbody`);
+            if (!table) return;
+
+            const searchInput = document.querySelector(`[data-search-progress="${courseId}"]`);
+            const sortSelect = document.querySelector(`[data-sort-progress="${courseId}"]`);
+            const term = (searchInput?.value || '').trim().toLowerCase();
+            const sort = sortSelect?.value || 'progress-asc';
+
+            const rows = Array.from(table.querySelectorAll('tr'));
+            rows.forEach(r => {
+                const teacher = r.getAttribute('data-teacher') || '';
+                r.classList.toggle('d-none', !!term && !teacher.includes(term));
+            });
+
+            const visibleRows = rows.filter(r => !r.classList.contains('d-none'));
+            visibleRows.sort((a, b) => {
+                const pa = parseInt(a.getAttribute('data-progress') || '0', 10);
+                const pb = parseInt(b.getAttribute('data-progress') || '0', 10);
+                const ea = a.getAttribute('data-teacher') || '';
+                const eb = b.getAttribute('data-teacher') || '';
+
+                switch (sort) {
+                    case 'progress-desc': return pb - pa;
+                    case 'email-asc': return ea.localeCompare(eb);
+                    case 'email-desc': return eb.localeCompare(ea);
+                    default: return pa - pb;
+                }
+            });
+
+            visibleRows.forEach(r => table.appendChild(r));
+        };
+
+        document.querySelectorAll('[data-search-progress]').forEach(input => {
+            const courseId = input.getAttribute('data-search-progress');
+            input.addEventListener('input', () => applyFilters(courseId));
+        });
+
+        document.querySelectorAll('[data-sort-progress]').forEach(select => {
+            const courseId = select.getAttribute('data-sort-progress');
+            select.addEventListener('change', () => applyFilters(courseId));
+        });
+    })();
+</script>

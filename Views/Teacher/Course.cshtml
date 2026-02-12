@@ -1,39 +1,51 @@
 @model RoboticCoders.ViewModels.Teacher.TeacherCourseDetailsViewModel
 
-<div class="moodle-course-header mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; color: white;">
-    <h1 style="margin: 0; font-size: 2em;">📚 @Model.Course?.Title</h1>
-    <p class="text-white-50">@Model.Course?.Description</p>
+<div class="mb-4 p-4 rounded" style="background:#2b6cb0;color:white;">
+    <h1 class="m-0">@Model.Course?.Title</h1>
+    <p class="mb-0">@Model.Course?.Description</p>
 </div>
 
 <div class="row">
     <div class="col-lg-8">
-        <h3 class="mb-3">📋 Contenido del curso</h3>
+        <h3 class="mb-3">Contenido del curso</h3>
+
         @if (Model.Course?.Modules != null && Model.Course.Modules.Any())
         {
-            @foreach (var module in Model.Course.Modules)
+            @foreach (var module in Model.Course.Modules.OrderBy(m => m.Id))
             {
-                <div class="card mb-4" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div class="card mb-3">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">@module.Title</h5>
+                        <strong>@module.Title</strong>
                     </div>
                     <div class="card-body">
-                        @if (module.Lessons != null && module.Lessons.Any())
+                        @if (module.Lessons.Any())
                         {
-                            <div class="lessons-list">
-                            @foreach (var lesson in module.Lessons)
+                            @foreach (var lesson in module.Lessons.OrderBy(l => l.Id))
                             {
-                                <div class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom" style="transition: background-color 0.2s;">
+                                var reviewed = Model.ReviewedLessonIds.Contains(lesson.Id);
+                                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                                     <div>
-                                        <h6 class="mb-0">📖 @lesson.Title</h6>
+                                        <div><strong>@lesson.Title</strong></div>
+                                        <small class="text-muted">@(reviewed ? "Revisada" : "Pendiente por revisar")</small>
                                     </div>
-                                    <a class="btn btn-sm btn-primary" href="/Course/Lesson/@lesson.Id">Ver</a>
+                                    <div class="d-flex gap-2">
+                                        <a class="btn btn-sm btn-outline-secondary" href="/Course/Lesson/@lesson.Id" target="_blank">Ver leccion</a>
+                                        @if (!reviewed)
+                                        {
+                                            <form asp-action="CompleteLesson" method="post" class="m-0">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="courseId" value="@Model.Course?.Id" />
+                                                <input type="hidden" name="lessonId" value="@lesson.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success">Marcar revisada</button>
+                                            </form>
+                                        }
+                                    </div>
                                 </div>
                             }
-                            </div>
                         }
                         else
                         {
-                            <p class="text-muted text-center py-3">No hay lecciones en este módulo.</p>
+                            <p class="text-muted mb-0">No hay lecciones en este modulo.</p>
                         }
                     </div>
                 </div>
@@ -41,43 +53,86 @@
         }
         else
         {
-            <div class="alert alert-info">No hay módulos en este curso.</div>
+            <div class="alert alert-info">No hay modulos en este curso.</div>
         }
     </div>
 
     <div class="col-lg-4">
-        <h3 class="mb-3">👥 Estudiantes (@(Model.Students?.Count ?? 0))</h3>
-        @if (Model.Students != null && Model.Students.Any())
+        <h3 class="mb-3">Estudiantes (@Model.Students.Count)</h3>
+        @if (Model.Students.Any())
         {
-            <div class="card" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <div class="card-body p-0">
-                @foreach (var s in Model.Students)
-                {
-                    var totalLessons = Model.Course?.Modules?.SelectMany(m => m.Lessons).Count() ?? 0;
-                    var percent = totalLessons > 0 ? (s.CompletedLessons * 100) / totalLessons : 0;
-                    
-                    <div class="p-3" style="border-bottom: 1px solid #dee2e6;">
-                        <div class="d-flex justify-content-between mb-1">
-                            <strong>@s.StudentEmail</strong>
-                            <span class="badge bg-success">@s.CompletedLessons/@totalLessons</span>
-                        </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar bg-success" style="width: @percent%"></div>
-                        </div>
+            var lagging = Model.Students
+                .OrderByDescending(s => s.MissingLessons)
+                .ThenBy(s => s.ProgressPercent)
+                .ThenBy(s => s.StudentEmail)
+                .Take(5)
+                .ToList();
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="mb-1">Top 5 con mas pendientes</h6>
+                    <small class="text-muted d-block mb-2">Lecciones faltantes por estudiante.</small>
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th>Faltan</th>
+                                    <th>Progreso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var s in lagging)
+                                {
+                                    <tr>
+                                        <td>@s.StudentEmail</td>
+                                        <td>@s.MissingLessons</td>
+                                        <td>@s.ProgressPercent%</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
-                }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-0">
+                    @foreach (var s in Model.Students)
+                    {
+                        <div class="p-3 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <strong>@s.StudentEmail</strong>
+                                <span>@s.ProgressPercent%</span>
+                            </div>
+                            <div class="progress mt-2" style="height:8px;">
+                                <div class="progress-bar" style="width:@s.ProgressPercent%"></div>
+                            </div>
+                            <small class="text-muted d-block mt-2">@s.CompletedLessons completadas, @s.MissingLessons pendientes</small>
+                            @if (s.MissingLessons > 0)
+                            {
+                                <details class="mt-1">
+                                    <summary>Ver pendientes</summary>
+                                    <ul class="mb-0 mt-1">
+                                        @foreach (var missing in s.MissingLessonTitles)
+                                        {
+                                            <li><small>@missing</small></li>
+                                        }
+                                    </ul>
+                                </details>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
         }
         else
         {
-            <div class="alert alert-warning">Sin estudiantes asignados.</div>
+            <div class="alert alert-warning">No hay estudiantes asignados a este docente.</div>
         }
-        
+
         <div class="mt-3">
-            <a href="/Teacher/ExportStudentsCSV?courseId=@Model.Course?.Id" class="btn btn-outline-info w-100">
-                📥 Descargar lista
-            </a>
+            <a href="/Teacher/ExportStudentsCSV?courseId=@Model.Course?.Id" class="btn btn-outline-primary w-100">Exportar estudiantes</a>
         </div>
     </div>
 </div>

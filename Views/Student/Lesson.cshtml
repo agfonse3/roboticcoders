@@ -1,42 +1,79 @@
-@model RoboticCoders.ViewModels.Student.StudentLessonViewModel
+﻿@model RoboticCoders.ViewModels.Student.StudentLessonViewModel
+@{
+    var slidePath = string.IsNullOrWhiteSpace(Model.Lesson.SlideUrl)
+        ? string.Empty
+        : Url.Content(Model.Lesson.SlideUrl);
 
-<div class="container-fluid">
-    <div class="row">
-        <aside class="col-md-3 border-end" style="min-height:80vh; background:#f8f9fa;">
-            <div class="p-3">
-                <h5 class="mb-3">@Model.Course?.Title</h5>
+    var hasSlides = !string.IsNullOrWhiteSpace(slidePath);
+    var isPdf = hasSlides && slidePath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
+    var isPpt = hasSlides && (slidePath.EndsWith(".ppt", StringComparison.OrdinalIgnoreCase) || slidePath.EndsWith(".pptx", StringComparison.OrdinalIgnoreCase));
 
-                <div class="d-flex align-items-center mb-3">
-                    <div class="me-2">
-                        <div class="rounded-circle bg-light" style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;border:2px solid #eee;">
-                            <strong>@Model.ProgressPercent% </strong>
-                        </div>
+    var isAbsoluteSlide = hasSlides && (slidePath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || slidePath.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+    var absoluteSlideUrl = hasSlides
+        ? (isAbsoluteSlide ? slidePath : $"{Context.Request.Scheme}://{Context.Request.Host}{slidePath}")
+        : string.Empty;
+
+    var officeEmbedUrl = isPpt
+        ? $"https://view.officeapps.live.com/op/embed.aspx?src={Uri.EscapeDataString(absoluteSlideUrl)}"
+        : string.Empty;
+    var googleEmbedUrl = isPpt
+        ? $"https://docs.google.com/gview?embedded=true&url={Uri.EscapeDataString(absoluteSlideUrl)}"
+        : string.Empty;
+
+    var canPreviewInline = isPdf || isPpt;
+    var totalLessons = Model.Modules.SelectMany(m => m.Lessons).Count();
+    var isLocalHost = string.Equals(Context.Request.Host.Host, "localhost", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(Context.Request.Host.Host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
+    var isStudent = User.IsInRole("Estudiante");
+    var isTeacher = User.IsInRole("Docente");
+    var isAdmin = User.IsInRole("Admin");
+    var lessonBasePath = isStudent ? "/Student/Lesson/" : "/Course/Lesson/";
+    var backToCoursesUrl = isStudent
+        ? "/Student/Dashboard"
+        : isTeacher
+            ? "/Teacher/Dashboard"
+            : isAdmin
+                ? "/Admin/Dashboard"
+                : "/Course/Index";
+    var viewCourseUrl = isStudent
+        ? $"/Student/Course/{Model.CourseId}"
+        : isTeacher
+            ? $"/Teacher/Course?courseId={Model.CourseId}"
+            : $"/Course/Details/{Model.CourseId}";
+}
+
+<div class="lesson-shell container-fluid">
+    <div class="row g-0">
+        <aside class="col-xl-3 lesson-aside">
+            <div class="aside-content">
+                <div class="aside-top">
+                    <h5 class="mb-1">@Model.Course?.Title</h5>
+                    <a class="btn btn-sm btn-outline-primary" href="@backToCoursesUrl">Volver a mis cursos</a>
+                </div>
+
+                <div class="progress-kpi">
+                    <div class="kpi-ring">
+                        <strong>@Model.ProgressPercent%</strong>
                     </div>
                     <div>
-                        <small class="text-muted">Progreso</small>
-                        <div>@Model.CompletedLessonIds.Count / @Model.Modules.SelectMany(m=>m.Lessons).Count() lecciones</div>
+                        <small>Progreso</small>
+                        <div>@Model.CompletedLessonIds.Count / @totalLessons lecciones</div>
                     </div>
                 </div>
 
                 <nav class="lesson-nav">
                     @foreach (var module in Model.Modules)
                     {
-                        <div class="mb-2">
+                        <div class="module-nav">
                             <strong>@module.Title</strong>
-                            <ul class="list-unstyled ms-2">
-                                @foreach (var lesson in module.Lessons.OrderBy(l=>l.Id))
+                            <ul>
+                                @foreach (var lesson in module.Lessons.OrderBy(l => l.Id))
                                 {
                                     var completed = Model.CompletedLessonIds.Contains(lesson.Id);
-                                    <li class="py-1">
-                                        <a class="text-decoration-none @(lesson.Id == Model.Lesson.Id ? "fw-bold" : "")" href="/Student/Lesson/@lesson.Id">
-                                            @if (completed)
-                                            {
-                                                <span class="text-success me-2">✓</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted me-2">○</span>
-                                            }
+                                    var activeClass = lesson.Id == Model.Lesson.Id ? "active-link" : string.Empty;
+                                    <li>
+                                        <a class="@activeClass" href="@($"{lessonBasePath}{lesson.Id}")">
+                                            <span class="state-dot @(completed ? "done" : "pending")"></span>
                                             @lesson.Title
                                         </a>
                                     </li>
@@ -48,74 +85,122 @@
             </div>
         </aside>
 
-        <main class="col-md-9 p-4">
-            <div class="d-flex justify-content-between align-items-start mb-3">
+        <main class="col-xl-9 lesson-main">
+            <header class="lesson-head">
                 <div>
-                    <h2>@Model.Lesson.Title</h2>
-                    <small class="text-muted">@Model.Course?.Title</small>
+                    <p class="eyebrow">Leccion actual</p>
+                    <h1>@Model.Lesson.Title</h1>
+                    <small>@Model.Course?.Title</small>
                 </div>
-                <div>
-                    <form asp-controller="Student" asp-action="CompleteLesson" method="post" class="m-0">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
-                        <input type="hidden" name="nextLessonId" value="@(Model.NextLessonId ?? 0)" />
-                        <button class="btn btn-success me-2">✅ Marcar completada</button>
-                    </form>
+                <div class="head-actions">
+                    <a class="btn btn-outline-secondary" href="@viewCourseUrl">Ver este curso</a>
+                    @if (isStudent)
+                    {
+                        <form asp-controller="Student" asp-action="CompleteLesson" method="post" class="m-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
+                            @if (Model.NextLessonId.HasValue)
+                            {
+                                <input type="hidden" name="nextLessonId" value="@Model.NextLessonId.Value" />
+                            }
+                            <button class="btn btn-success">Marcar completada</button>
+                        </form>
+                    }
+                    else if (isTeacher)
+                    {
+                        <form asp-controller="Teacher" asp-action="CompleteLesson" method="post" class="m-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="courseId" value="@Model.CourseId" />
+                            <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
+                            <button class="btn btn-success">Marcar revisada</button>
+                        </form>
+                    }
                     @if (Model.NextLessonId.HasValue)
                     {
-                        <a class="btn btn-primary" href="/Student/Lesson/@Model.NextLessonId">Siguiente →</a>
+                        <a class="btn btn-primary" href="@($"{lessonBasePath}{Model.NextLessonId}")">Siguiente</a>
                     }
                 </div>
-            </div>
+            </header>
 
-            <div class="row">
-                <div class="col-lg-8">
+            <div class="row g-4">
+                <div class="col-12 col-xxl-8">
                     @if (!string.IsNullOrEmpty(Model.Lesson.VideoUrl))
                     {
-                        <div class="ratio ratio-16x9 mb-3">
-                            <iframe src="@Model.Lesson.VideoUrl" title="Video" allowfullscreen></iframe>
-                        </div>
-                    }
-
-                    @if (!string.IsNullOrEmpty(Model.Lesson.SlideUrl))
-                    {
-                        <div class="card mb-3">
-                            <div class="card-body p-0">
-                                <iframe src="@Model.Lesson.SlideUrl" width="100%" height="560" style="border:0;"></iframe>
+                        <section class="content-card">
+                            <h2>Video</h2>
+                            <div class="ratio ratio-16x9">
+                                <iframe src="@Model.Lesson.VideoUrl" title="Video" allowfullscreen></iframe>
                             </div>
-                        </div>
+                        </section>
                     }
 
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            @Html.Raw(Model.Lesson.Content)
-                        </div>
-                    </div>
+                    @if (hasSlides)
+                    {
+                        <section class="content-card">
+                            <h2>Diapositivas</h2>
+                            @if (canPreviewInline)
+                            {
+                                if (isPdf)
+                                {
+                                    <iframe src="@slidePath" width="100%" height="560" style="border:0; border-radius:10px;"></iframe>
+                                }
+                                else if (isPpt)
+                                {
+                                    <div class="viewer-switch mb-2">
+                                        <button type="button" class="btn btn-sm btn-outline-primary active" data-viewer="office">Microsoft</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="google">Google</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="direct">Navegador</button>
+                                    </div>
+                                    <iframe id="pptPreviewFrame"
+                                            src="@officeEmbedUrl"
+                                            width="100%"
+                                            height="560"
+                                            style="border:0; border-radius:10px;"
+                                            data-office="@officeEmbedUrl"
+                                            data-google="@googleEmbedUrl"
+                                            data-direct="@slidePath"
+                                            allowfullscreen></iframe>
+                                    if (isLocalHost)
+                                    {
+                                        <p class="inline-note">Si estas en localhost, Microsoft/Google no pueden leer tu archivo local. Usa "Navegador", "Abrir" o "Descargar".</p>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <p class="inline-note">Vista previa en linea disponible para PDF, PPT y PPTX.</p>
+                            }
+                        </section>
+                    }
+
+                    <section class="content-card">
+                        <h2>Contenido</h2>
+                        <div class="lesson-html">@Html.Raw(Model.Lesson.Content)</div>
+                    </section>
                 </div>
 
-                <div class="col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5>Recursos</h5>
-                            <p class="mb-0">Abrir o descargar diapositivas:</p>
-                            @if (!string.IsNullOrEmpty(Model.Lesson.SlideUrl))
-                            {
-                                <div class="mt-2">
-                                    <a href="@Model.Lesson.SlideUrl" target="_blank" class="btn btn-sm btn-secondary me-2">Abrir</a>
-                                    <a href="@Model.Lesson.SlideUrl" download class="btn btn-sm btn-outline-secondary">Descargar</a>
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h6>Progreso del curso</h6>
-                            <div class="progress" style="height:12px;">
-                                <div class="progress-bar" role="progressbar" style="width:@Model.ProgressPercent%" aria-valuenow="@Model.ProgressPercent" aria-valuemin="0" aria-valuemax="100">@Model.ProgressPercent%</div>
+                <div class="col-12 col-xxl-4">
+                    <section class="content-card sticky-side">
+                        <h2>Recursos</h2>
+                        @if (hasSlides)
+                        {
+                            <div class="resource-actions">
+                                <a href="@slidePath" target="_blank" class="btn btn-secondary">Abrir</a>
+                                <a href="@slidePath" download class="btn btn-outline-secondary">Descargar</a>
                             </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">No hay diapositivas adjuntas.</p>
+                        }
+                    </section>
+
+                    <section class="content-card mt-3 sticky-side">
+                        <h2>Progreso del curso</h2>
+                        <div class="progress" style="height: 12px;">
+                            <div class="progress-bar" role="progressbar" style="width:@Model.ProgressPercent%" aria-valuenow="@Model.ProgressPercent" aria-valuemin="0" aria-valuemax="100">@Model.ProgressPercent%</div>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </main>
@@ -123,8 +208,231 @@
 </div>
 
 <style>
-.lesson-nav a { color: inherit; }
-.lesson-nav a:hover { text-decoration: none; }
-.lesson-nav strong { font-size: .95rem; }
-@@media (max-width:767px) { aside.col-md-3{display:none;} }
+    .lesson-shell {
+        --ink: #121a2f;
+        --muted: #64738f;
+        --line: #dae3f2;
+        --bg-soft: linear-gradient(180deg, #f7fbff 0%, #eef4ff 100%);
+        color: var(--ink);
+    }
+
+    .lesson-aside {
+        min-height: 100vh;
+        background: var(--bg-soft);
+        border-right: 1px solid var(--line);
+    }
+
+    .aside-content {
+        padding: 24px 18px;
+    }
+
+    .aside-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .progress-kpi {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 12px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px solid var(--line);
+    }
+
+    .kpi-ring {
+        width: 60px;
+        height: 60px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        font-size: .95rem;
+        background: conic-gradient(#0ea5a4 calc(var(--p, 0) * 1%), #dce7f8 0);
+        border: 2px solid #c9d7ef;
+    }
+
+    .module-nav {
+        margin-bottom: 12px;
+    }
+
+    .module-nav > strong {
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .module-nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 0 6px;
+    }
+
+    .module-nav li {
+        margin-bottom: 4px;
+    }
+
+    .module-nav a {
+        color: #223355;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 0;
+    }
+
+    .module-nav a.active-link {
+        font-weight: 700;
+        color: #0b4eb2;
+    }
+
+    .state-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        display: inline-block;
+        flex: none;
+    }
+
+    .state-dot.done {
+        background: #159f67;
+    }
+
+    .state-dot.pending {
+        background: #b6c2d8;
+    }
+
+    .lesson-main {
+        padding: 26px;
+    }
+
+    .lesson-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        align-items: start;
+        margin-bottom: 20px;
+    }
+
+    .lesson-head .eyebrow {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-size: .75rem;
+        color: #2e63c8;
+        font-weight: 700;
+    }
+
+    .lesson-head h1 {
+        margin: 4px 0;
+        font-size: clamp(1.4rem, 2.4vw, 2rem);
+    }
+
+    .head-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .content-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(17, 34, 71, .08);
+    }
+
+    .content-card h2 {
+        margin: 0 0 12px;
+        font-size: 1.06rem;
+    }
+
+    .inline-note {
+        margin-top: 10px;
+        margin-bottom: 0;
+        font-size: .9rem;
+        color: var(--muted);
+    }
+
+    .resource-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .viewer-switch {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .lesson-html {
+        line-height: 1.62;
+    }
+
+    .sticky-side {
+        position: sticky;
+        top: 16px;
+    }
+
+    @@media (max-width: 1199px) {
+        .lesson-aside {
+            min-height: 0;
+            border-right: 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .sticky-side {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .lesson-main {
+            padding: 16px;
+        }
+
+        .aside-content {
+            padding: 16px 14px;
+        }
+
+        .lesson-head {
+            flex-direction: column;
+        }
+
+        .head-actions {
+            justify-content: flex-start;
+        }
+    }
 </style>
+
+<script>
+    (() => {
+        const ring = document.querySelector('.kpi-ring');
+        if (ring) {
+            ring.style.setProperty('--p', '@Model.ProgressPercent');
+        }
+
+        const frame = document.getElementById('pptPreviewFrame');
+        if (!frame) return;
+
+        const buttons = document.querySelectorAll('.viewer-switch [data-viewer]');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-viewer');
+                const nextSrc =
+                    mode === 'google' ? frame.dataset.google :
+                    mode === 'direct' ? frame.dataset.direct :
+                    frame.dataset.office;
+                frame.src = nextSrc || frame.src;
+
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    })();
+</script>

@@ -4262,11 +4262,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\RoboticCoders.csproj",
+      "projectUniqueName": "D:\\documeentos\\GitHub\\roboticcoders\\RoboticCoders.csproj",
       "projectName": "RoboticCoders",
-      "projectPath": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\RoboticCoders.csproj",
+      "projectPath": "D:\\documeentos\\GitHub\\roboticcoders\\RoboticCoders.csproj",
       "packagesPath": "C:\\Users\\ajgee\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\obj\\",
+      "outputPath": "D:\\documeentos\\GitHub\\roboticcoders\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ajgee\\AppData\\Roaming\\NuGet\\NuGet.Config"

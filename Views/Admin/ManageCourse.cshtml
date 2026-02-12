@@ -1,143 +1,146 @@
+@model RoboticCoders.ViewModels.Admin.ManageCourseViewModel
 @{
-    var course = (RoboticCoders.Models.Course)ViewBag.Course;
-    var teachers = (IEnumerable<RoboticCoders.Models.ApplicationUser>)ViewBag.Teachers;
-    var students = (IEnumerable<RoboticCoders.Models.ApplicationUser>)ViewBag.Students;
-    var assignedTeacherId = (string)ViewBag.AssignedTeacherId;
-    var enrolledStudentIds = (List<string>)ViewBag.EnrolledStudentIds;
+    var assignedCount = Model.Students.Count(s => !string.IsNullOrWhiteSpace(s.AssignedTeacherId));
 }
 
 <div class="manage-course-container">
-    <div class="course-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; color: white; margin-bottom: 30px;">
-        <h1 style="margin: 0;">⚙️ Configurar curso</h1>
-        <h2 style="font-size: 1.5em; font-weight: normal;">@course.Title</h2>
+    <div class="course-header" style="padding: 24px; border-radius: 10px; background: #2b6cb0; color: white; margin-bottom: 24px;">
+        <h1 style="margin: 0;">Configurar curso</h1>
+        <h2 style="font-size: 1.2rem; font-weight: normal; margin-top: 4px;">@Model.CourseTitle</h2>
     </div>
 
-    <form method="post" action="/Admin/ManageCourse" class="row">
-        <input type="hidden" name="id" value="@course.Id" />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            Revisa la configuracion. Hay datos invalidos en docentes o asignaciones.
+        </div>
+    }
 
-        <!-- Assignar docente -->
-        <div class="col-lg-6">
-            <div class="card mb-4" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <form method="post" asp-action="ManageCourse" class="row g-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.CourseId" />
+
+        <div class="col-lg-4">
+            <div class="card h-100">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">👨‍🏫 Docente Asignado</h4>
+                    <h4 class="mb-0">1) Docentes del curso</h4>
                 </div>
                 <div class="card-body">
-                    <label class="mb-3">Selecciona un docente:</label>
-                    <select name="selectedTeacherId" class="form-select form-select-lg">
-                        <option value="">-- Sin docente --</option>
-                        @foreach (var teacher in teachers)
-                        {
-                            if (assignedTeacherId == teacher.Id)
-                            {
-                                <option value="@teacher.Id" selected>@teacher.Email</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.Email</option>
-                            }
-                        }
-                    </select>
-                    <small class="text-muted mt-2 d-block">El docente podrá ver este curso y gestionar a sus estudiantes.</small>
-                </div>
-            </div>
-        </div>
+                    <p class="text-muted">Selecciona uno o varios docentes para este curso.</p>
 
-        <!-- Assign students -->
-        <div class="col-lg-6">
-            <div class="card mb-4" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0">👥 Estudiantes Inscritos</h4>
-                </div>
-                <div class="card-body">
-                    <label class="mb-3">Selecciona estudiantes:</label>
-                    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 6px; padding: 10px;">
-                        @if (students != null && students.Any())
-                        {
-                            @foreach (var student in students)
-                            {
-                                <div class="form-check mb-2">
-                                    @if (enrolledStudentIds.Contains(student.Id))
-                                    {
-                                        <input class="form-check-input" type="checkbox" name="selectedStudentIds[]" value="@student.Id" id="student_@student.Id" checked />
-                                    }
-                                    else
-                                    {
-                                        <input class="form-check-input" type="checkbox" name="selectedStudentIds[]" value="@student.Id" id="student_@student.Id" />
-                                    }
-                                    <label class="form-check-label" for="student_@student.Id">
-                                        @student.Email
-                                    </label>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <p class="text-muted">Sin estudiantes disponibles.</p>
-                        }
-                    </div>
-                    <small class="text-muted mt-2 d-block">Los estudiantes verán este curso en su dashboard.</small>
-                </div>
-            </div>
-        </div>
-<div class="col-12">
-    <div class="card mb-4">
-        <div class="card-header bg-info text-white">
-            <h4 class="mb-0">📚 Módulos y Lecciones</h4>
-        </div>
-        <div class="card-body">
-            <!-- Crear módulo -->
-            <form method="post" asp-action="CreateModule" class="mb-3 d-flex gap-2">
-                <input type="hidden" name="courseId" value="@course.Id" />
-                <input type="text" name="title" placeholder="Nuevo módulo" class="form-control" />
-                <button type="submit" class="btn btn-primary">➕ Agregar módulo</button>
-            </form>
-
-            @if (course.Modules != null && course.Modules.Any())
-            {
-                <ul class="list-group">
-                    @foreach (var module in course.Modules)
+                    @if (Model.Teachers.Any())
                     {
-                        <li class="list-group-item">
-                            <strong>@module.Title</strong>
-
-                            <!-- Crear lección -->
-                            <form method="post" asp-action="CreateLesson" class="mt-2 d-flex gap-2">
-                                <input type="hidden" name="moduleId" value="@module.Id" />
-                                <input type="text" name="title" placeholder="Nueva lección" class="form-control" />
-                                <button type="submit" class="btn btn-secondary">➕ Agregar lección</button>
-                            </form>
-
-                            <!-- Listado de lecciones -->
-                            @if (module.Lessons != null && module.Lessons.Any())
-                            {
-                                <ul class="mt-2">
-                                    @foreach (var lesson in module.Lessons)
-                                    {
-                                        <li>@lesson.Title</li>
-                                    }
-                                </ul>
-                            }
-                        </li>
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            var isChecked = Model.SelectedTeacherIds.Contains(teacher.Id);
+                            <div class="form-check mb-2">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="selectedTeacherIds"
+                                       value="@teacher.Id"
+                                       id="teacher_@teacher.Id"
+                                       @(isChecked ? "checked" : "") />
+                                <label class="form-check-label" for="teacher_@teacher.Id">@teacher.Email</label>
+                            </div>
+                        }
                     }
-                </ul>
-            }
-            else
-            {
-                <p class="text-muted">No hay módulos creados aún.</p>
-            }
+                    else
+                    {
+                        <p class="text-muted mb-0">No hay docentes disponibles.</p>
+                    }
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">2) Estudiantes por docente</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Cada estudiante se asigna a un solo docente dentro de este curso.</p>
+                    <div class="quick-assign">
+                        <div class="quick-assign-head">
+                            <strong>Asignacion rapida</strong>
+                            <span>@assignedCount / @Model.Students.Count asignados</span>
+                        </div>
+                        <div class="quick-assign-actions">
+                            <select id="bulkTeacherSelect" class="form-select form-select-sm">
+                                <option value="">Selecciona docente...</option>
+                                @foreach (var teacher in Model.Teachers)
+                                {
+                                    <option value="@teacher.Id">@teacher.Email</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="applyBulkAssign('all')">Asignar a todos</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="applyBulkAssign('unassigned')">Solo sin asignar</button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearAllAssignments()">Limpiar todo</button>
+                        </div>
+                    </div>
+
+                    <div style="max-height: 460px; overflow-y: auto;">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th>Docente asignado</th>
+                                    <th>Progreso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var student in Model.Students)
+                                {
+                                    <tr>
+                                        <td>@student.StudentEmail</td>
+                                        <td>
+                                            <select class="form-select form-select-sm student-teacher-select"
+                                                    data-current="@student.AssignedTeacherId"
+                                                    name="studentTeacherAssignments[@student.StudentId]">
+                                                <option value="">-- Sin asignar --</option>
+                                                @foreach (var teacher in Model.Teachers)
+                                                {
+                                                    var selected = student.AssignedTeacherId == teacher.Id;
+                                                    if (selected)
+                                                    {
+                                                        <option value="@teacher.Id" selected>@teacher.Email</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@teacher.Id">@teacher.Email</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>@student.ProgressPercent%</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="col-12">
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">
-                    💾 Guardar configuración
-                </button>
-                <a href="/Admin/Dashboard" class="btn btn-secondary btn-lg">
-                    ❌ Cancelar
-                </a>
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">3) Modulos y lecciones</h4>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Crea los modulos del curso y luego sus lecciones con diapositivas y video opcional.</p>
+                    <a class="btn btn-outline-primary"
+                       asp-controller="AdminCourse"
+                       asp-action="Modules"
+                       asp-route-id="@Model.CourseId">
+                        Ir al gestor de modulos y lecciones
+                    </a>
+                </div>
             </div>
+        </div>
+
+        <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar configuracion</button>
+            <a href="/Admin/Dashboard" class="btn btn-secondary btn-lg">Cancelar</a>
         </div>
     </form>
 </div>
@@ -148,7 +151,58 @@
         margin: 40px auto;
         padding: 0 20px;
     }
+
     .card {
         border: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+    }
+
+    .quick-assign {
+        border: 1px solid #d7e2f1;
+        border-radius: 10px;
+        padding: 12px;
+        background: #f7faff;
+        margin-bottom: 12px;
+    }
+
+    .quick-assign-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        color: #1f3b70;
+    }
+
+    .quick-assign-actions {
+        display: grid;
+        grid-template-columns: minmax(200px, 1fr) auto auto auto;
+        gap: 8px;
+        align-items: center;
+    }
+
+    @@media (max-width: 992px) {
+        .quick-assign-actions {
+            grid-template-columns: 1fr 1fr;
+        }
     }
 </style>
+
+<script>
+    function applyBulkAssign(mode) {
+        const teacherId = document.getElementById('bulkTeacherSelect').value;
+        if (!teacherId) return;
+
+        const selects = document.querySelectorAll('.student-teacher-select');
+        selects.forEach(select => {
+            const current = select.value;
+            if (mode === 'all' || (mode === 'unassigned' && !current)) {
+                select.value = teacherId;
+            }
+        });
+    }
+
+    function clearAllAssignments() {
+        const selects = document.querySelectorAll('.student-teacher-select');
+        selects.forEach(select => select.value = '');
+    }
+</script>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "mVK0ZCGUkf4FKLcksNGaQhKDxTebht8IAlkwqVZYrHQ=",
+  "Hash": "FFAvlWZizhs3QH5vY8Z9wNjouhpYdecifKINFxXVyS4=",
   "Source": "RoboticCoders",
   "BasePath": "_content/RoboticCoders",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "RoboticCoders\\wwwroot",
       "Source": "RoboticCoders",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\obj\\Debug\\net8.0\\scopedcss\\bundle\\RoboticCoders.styles.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\obj\\Debug\\net8.0\\scopedcss\\bundle\\RoboticCoders.styles.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "RoboticCoders.styles.css",
       "AssetKind": "All",
@@ -33,13 +33,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\obj\\Debug\\net8.0\\scopedcss\\bundle\\RoboticCoders.styles.css"
+      "OriginalItemSpec": "D:\\documeentos\\GitHub\\roboticcoders\\obj\\Debug\\net8.0\\scopedcss\\bundle\\RoboticCoders.styles.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\RoboticCoders.bundle.scp.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\RoboticCoders.bundle.scp.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "RoboticCoders.bundle.scp.css",
       "AssetKind": "All",
@@ -52,13 +52,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\RoboticCoders.bundle.scp.css"
+      "OriginalItemSpec": "D:\\documeentos\\GitHub\\roboticcoders\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\RoboticCoders.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\css\\site.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\css\\site.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "css/site.css",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\css\\site.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\favicon.ico",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\favicon.ico",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "favicon.ico",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\courses\\aleman.png",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\courses\\aleman.png",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/courses/aleman.png",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\img\\courses\\aleman.png"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\courses\\arduino.png",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\courses\\arduino.png",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/courses/arduino.png",
       "AssetKind": "All",
@@ -131,10 +131,10 @@
       "OriginalItemSpec": "wwwroot\\img\\courses\\arduino.png"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\courses\\ingles.png",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\courses\\ingles.png",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/courses/ingles.png",
       "AssetKind": "All",
@@ -150,10 +150,10 @@
       "OriginalItemSpec": "wwwroot\\img\\courses\\ingles.png"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\courses\\python.png",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\courses\\python.png",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/courses/python.png",
       "AssetKind": "All",
@@ -169,10 +169,10 @@
       "OriginalItemSpec": "wwwroot\\img\\courses\\python.png"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\courses\\roblox.png",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\courses\\roblox.png",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/courses/roblox.png",
       "AssetKind": "All",
@@ -188,10 +188,10 @@
       "OriginalItemSpec": "wwwroot\\img\\courses\\roblox.png"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\courses\\tinkercad.png",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\courses\\tinkercad.png",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/courses/tinkercad.png",
       "AssetKind": "All",
@@ -207,10 +207,10 @@
       "OriginalItemSpec": "wwwroot\\img\\courses\\tinkercad.png"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\courses\\unity.png",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\courses\\unity.png",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/courses/unity.png",
       "AssetKind": "All",
@@ -226,10 +226,10 @@
       "OriginalItemSpec": "wwwroot\\img\\courses\\unity.png"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\img\\home\\kids.jpg",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\img\\home\\kids.jpg",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "img/home/kids.jpg",
       "AssetKind": "All",
@@ -245,10 +245,10 @@
       "OriginalItemSpec": "wwwroot\\img\\home\\kids.jpg"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\js\\site.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\js\\site.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "js/site.js",
       "AssetKind": "All",
@@ -264,10 +264,10 @@
       "OriginalItemSpec": "wwwroot\\js\\site.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.css",
       "AssetKind": "All",
@@ -283,10 +283,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.css.map",
       "AssetKind": "All",
@@ -302,10 +302,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.min.css",
       "AssetKind": "All",
@@ -321,10 +321,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.min.css.map",
       "AssetKind": "All",
@@ -340,10 +340,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.rtl.css",
       "AssetKind": "All",
@@ -359,10 +359,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.rtl.css.map",
       "AssetKind": "All",
@@ -378,10 +378,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css",
       "AssetKind": "All",
@@ -397,10 +397,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css.map",
       "AssetKind": "All",
@@ -416,10 +416,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.css",
       "AssetKind": "All",
@@ -435,10 +435,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.css.map",
       "AssetKind": "All",
@@ -454,10 +454,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.min.css",
       "AssetKind": "All",
@@ -473,10 +473,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.min.css.map",
       "AssetKind": "All",
@@ -492,10 +492,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.rtl.css",
       "AssetKind": "All",
@@ -511,10 +511,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.rtl.css.map",
       "AssetKind": "All",
@@ -530,10 +530,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css",
       "AssetKind": "All",
@@ -549,10 +549,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css.map",
       "AssetKind": "All",
@@ -568,10 +568,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.css",
       "AssetKind": "All",
@@ -587,10 +587,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.css.map",
       "AssetKind": "All",
@@ -606,10 +606,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.min.css",
       "AssetKind": "All",
@@ -625,10 +625,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.min.css.map",
       "AssetKind": "All",
@@ -644,10 +644,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.rtl.css",
       "AssetKind": "All",
@@ -663,10 +663,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.rtl.css.map",
       "AssetKind": "All",
@@ -682,10 +682,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css",
       "AssetKind": "All",
@@ -701,10 +701,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css.map",
       "AssetKind": "All",
@@ -720,10 +720,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.css",
       "AssetKind": "All",
@@ -739,10 +739,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.css.map",
       "AssetKind": "All",
@@ -758,10 +758,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.min.css",
       "AssetKind": "All",
@@ -777,10 +777,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -796,10 +796,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.rtl.css",
       "AssetKind": "All",
@@ -815,10 +815,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.rtl.css.map",
       "AssetKind": "All",
@@ -834,10 +834,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.rtl.min.css",
       "AssetKind": "All",
@@ -853,10 +853,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/css/bootstrap.rtl.min.css.map",
       "AssetKind": "All",
@@ -872,10 +872,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle.js",
       "AssetKind": "All",
@@ -891,10 +891,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle.js.map",
       "AssetKind": "All",
@@ -910,10 +910,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle.min.js",
       "AssetKind": "All",
@@ -929,10 +929,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle.min.js.map",
       "AssetKind": "All",
@@ -948,10 +948,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm.js",
       "AssetKind": "All",
@@ -967,10 +967,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm.js.map",
       "AssetKind": "All",
@@ -986,10 +986,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm.min.js",
       "AssetKind": "All",
@@ -1005,10 +1005,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.esm.min.js.map",
       "AssetKind": "All",
@@ -1024,10 +1024,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.js",
       "AssetKind": "All",
@@ -1043,10 +1043,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.js.map",
       "AssetKind": "All",
@@ -1062,10 +1062,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.min.js",
       "AssetKind": "All",
@@ -1081,10 +1081,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/dist/js/bootstrap.min.js.map",
       "AssetKind": "All",
@@ -1100,10 +1100,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\bootstrap\\LICENSE",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/bootstrap/LICENSE",
       "AssetKind": "All",
@@ -1119,10 +1119,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\LICENSE"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
       "AssetKind": "All",
@@ -1138,10 +1138,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js",
       "AssetKind": "All",
@@ -1157,10 +1157,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation-unobtrusive/LICENSE.txt",
       "AssetKind": "All",
@@ -1176,10 +1176,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation/dist/additional-methods.js",
       "AssetKind": "All",
@@ -1195,10 +1195,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation/dist/additional-methods.min.js",
       "AssetKind": "All",
@@ -1214,10 +1214,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation/dist/jquery.validate.js",
       "AssetKind": "All",
@@ -1233,10 +1233,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation/dist/jquery.validate.min.js",
       "AssetKind": "All",
@@ -1252,10 +1252,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery-validation/LICENSE.md",
       "AssetKind": "All",
@@ -1271,10 +1271,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation\\LICENSE.md"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery\\dist\\jquery.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery/dist/jquery.js",
       "AssetKind": "All",
@@ -1290,10 +1290,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\dist\\jquery.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery/dist/jquery.min.js",
       "AssetKind": "All",
@@ -1309,10 +1309,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\dist\\jquery.min.js"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery/dist/jquery.min.map",
       "AssetKind": "All",
@@ -1328,10 +1328,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\lib\\jquery\\LICENSE.txt",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "lib/jquery/LICENSE.txt",
       "AssetKind": "All",
@@ -1347,10 +1347,48 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\uploads\\slides\\113ed3e3-d5dc-42db-8342-4a1b59adf649.pdf",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\prueba.html",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
+      "BasePath": "_content/RoboticCoders",
+      "RelativePath": "prueba.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\prueba.html"
+    },
+    {
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\0f3255eb-1421-4e70-9edd-973ad8914f08.pptx",
+      "SourceId": "RoboticCoders",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
+      "BasePath": "_content/RoboticCoders",
+      "RelativePath": "uploads/slides/0f3255eb-1421-4e70-9edd-973ad8914f08.pptx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\slides\\0f3255eb-1421-4e70-9edd-973ad8914f08.pptx"
+    },
+    {
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\113ed3e3-d5dc-42db-8342-4a1b59adf649.pdf",
+      "SourceId": "RoboticCoders",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "uploads/slides/113ed3e3-d5dc-42db-8342-4a1b59adf649.pdf",
       "AssetKind": "All",
@@ -1366,10 +1404,10 @@
       "OriginalItemSpec": "wwwroot\\uploads\\slides\\113ed3e3-d5dc-42db-8342-4a1b59adf649.pdf"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\uploads\\slides\\6bd7b10d-1574-4180-93c1-a02cb0482eae.pdf",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\6bd7b10d-1574-4180-93c1-a02cb0482eae.pdf",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "uploads/slides/6bd7b10d-1574-4180-93c1-a02cb0482eae.pdf",
       "AssetKind": "All",
@@ -1385,10 +1423,48 @@
       "OriginalItemSpec": "wwwroot\\uploads\\slides\\6bd7b10d-1574-4180-93c1-a02cb0482eae.pdf"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\uploads\\slides\\c351662e-6710-437a-8094-08ec0cd5b0cc.pdf",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\6c530065-425e-4ec0-b38e-d6bcfe61c2ee.pptx",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
+      "BasePath": "_content/RoboticCoders",
+      "RelativePath": "uploads/slides/6c530065-425e-4ec0-b38e-d6bcfe61c2ee.pptx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\slides\\6c530065-425e-4ec0-b38e-d6bcfe61c2ee.pptx"
+    },
+    {
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\b1dda4e1-a861-4b79-a002-559d3a491f12.pptx",
+      "SourceId": "RoboticCoders",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
+      "BasePath": "_content/RoboticCoders",
+      "RelativePath": "uploads/slides/b1dda4e1-a861-4b79-a002-559d3a491f12.pptx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\slides\\b1dda4e1-a861-4b79-a002-559d3a491f12.pptx"
+    },
+    {
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\c351662e-6710-437a-8094-08ec0cd5b0cc.pdf",
+      "SourceId": "RoboticCoders",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "uploads/slides/c351662e-6710-437a-8094-08ec0cd5b0cc.pdf",
       "AssetKind": "All",
@@ -1404,10 +1480,10 @@
       "OriginalItemSpec": "wwwroot\\uploads\\slides\\c351662e-6710-437a-8094-08ec0cd5b0cc.pdf"
     },
     {
-      "Identity": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\uploads\\slides\\deb83a10-5ad5-4858-9790-a3a5d3db00ee.pdf",
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\deb83a10-5ad5-4858-9790-a3a5d3db00ee.pdf",
       "SourceId": "RoboticCoders",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\ajgee\\Downloads\\RoboticCoders\\wwwroot\\",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
       "BasePath": "_content/RoboticCoders",
       "RelativePath": "uploads/slides/deb83a10-5ad5-4858-9790-a3a5d3db00ee.pdf",
       "AssetKind": "All",
@@ -1421,6 +1497,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\slides\\deb83a10-5ad5-4858-9790-a3a5d3db00ee.pdf"
+    },
+    {
+      "Identity": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\uploads\\slides\\dedfc62a-f092-4215-b3e0-41c96e15d3cc.pptx",
+      "SourceId": "RoboticCoders",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\documeentos\\GitHub\\roboticcoders\\wwwroot\\",
+      "BasePath": "_content/RoboticCoders",
+      "RelativePath": "uploads/slides/dedfc62a-f092-4215-b3e0-41c96e15d3cc.pptx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\slides\\dedfc62a-f092-4215-b3e0-41c96e15d3cc.pptx"
     }
   ]
 }

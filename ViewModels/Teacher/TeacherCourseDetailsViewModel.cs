@@ -1,10 +1,10 @@
 using RoboticCoders.Models;
 
-namespace RoboticCoders.ViewModels.Teacher
+namespace RoboticCoders.ViewModels.Teacher;
+
+public class TeacherCourseDetailsViewModel
 {
-    public class TeacherCourseDetailsViewModel
-    {
-        public Course Course { get; set; } = null!;
-        public List<TeacherStudentProgressViewModel> Students { get; set; } = new();
-    }
+    public Course? Course { get; set; }
+    public List<TeacherStudentProgressViewModel> Students { get; set; } = new();
+    public HashSet<int> ReviewedLessonIds { get; set; } = new();
 }
