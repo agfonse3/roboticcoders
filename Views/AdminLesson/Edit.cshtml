@@ -97,10 +97,42 @@
         }
     </div>
 
-    <div class="mb-3">
-        <label>Reemplazar diapositivas (PDF, PPT o PPTX)</label>
-        <input type="file" name="slides" accept=".pdf,.ppt,.pptx" class="form-control" />
-    </div>
+<div class="mb-3">
+  <label>Tipo de diapositivas</label>
+  <select name="SlidesType" id="slidesType" class="form-select">
+    <option value="File" selected="@(Model.SlidesType != "Embed")">Archivo (PDF/PPT/PPTX)</option>
+    <option value="Embed" selected="@(Model.SlidesType == "Embed")">Canva (embed)</option>
+  </select>
+</div>
+
+<div class="mb-3" id="slidesFileWrap">
+  <label>Subir diapositivas (PDF, PPT o PPTX)</label>
+  <input type="file" name="slides" accept=".pdf,.ppt,.pptx" class="form-control" />
+</div>
+
+<div class="mb-3" id="slidesEmbedWrap">
+  <label>Link embed (Canva)</label>
+  <input name="SlidesEmbedUrl" value="@Model.SlidesEmbedUrl" class="form-control"
+         placeholder="Pega aquí el src del iframe de Canva (Share → Embed)" />
+</div>
+
+<script>
+  (() => {
+    const sel = document.getElementById('slidesType');
+    const fileWrap = document.getElementById('slidesFileWrap');
+    const embedWrap = document.getElementById('slidesEmbedWrap');
+
+    function refresh() {
+      const isEmbed = sel.value === 'Embed';
+      embedWrap.style.display = isEmbed ? '' : 'none';
+      fileWrap.style.display = isEmbed ? 'none' : '';
+    }
+
+    sel.addEventListener('change', refresh);
+    refresh();
+  })();
+</script>
+
 
 <div class="mb-3">
     <label>Adjuntar HTML (múltiples)</label>

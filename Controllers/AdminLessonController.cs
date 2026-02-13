@@ -84,6 +84,9 @@ public class AdminLessonController : Controller
         existing.Title = lesson.Title;
         existing.Content = lesson.Content;
         existing.VideoUrl = lesson.VideoUrl;
+        existing.SlidesType = lesson.SlidesType;
+existing.SlidesEmbedUrl = lesson.SlidesEmbedUrl;
+
 
         if (slides != null)
         {
