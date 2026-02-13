@@ -10,5 +10,7 @@ namespace RoboticCoders.Models
 
         public int ModuleId { get; set; }
         public Module Module { get; set; } = null!;
+        public List<LessonHtmlResource> HtmlResources { get; set; } = new();
+
     }
 }

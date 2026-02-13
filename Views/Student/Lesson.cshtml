@@ -172,6 +172,42 @@
                             }
                         </section>
                     }
+@{
+    var htmls = Model.Lesson.HtmlResources?.OrderBy(x => x.Id).ToList()
+        ?? new List<RoboticCoders.Models.LessonHtmlResource>();
+    var firstUrl = htmls.FirstOrDefault()?.Url;
+}
+
+@if (htmls.Any())
+{
+    <section class="content-card">
+        <h2>Interactivo</h2>
+        <div class="viewer-switch mb-2">
+            @foreach (var r in htmls)
+            {
+                <button type="button" class="btn btn-sm btn-outline-primary html-tab"
+                        data-url="@r.Url">
+                    @(string.IsNullOrWhiteSpace(r.Title) ? r.OriginalFileName : r.Title)
+                </button>
+            }
+        </div>
+
+        <iframe id="lessonHtmlFrame" src="@firstUrl"
+                width="100%" height="560"
+                style="border:0; border-radius:10px;"></iframe>
+    </section>
+
+    <script>
+        (() => {
+            const frame = document.getElementById('lessonHtmlFrame');
+            document.querySelectorAll('.html-tab').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    frame.src = btn.dataset.url;
+                });
+            });
+        })();
+    </script>
+}
 
                     <section class="content-card">
                         <h2>Contenido</h2>

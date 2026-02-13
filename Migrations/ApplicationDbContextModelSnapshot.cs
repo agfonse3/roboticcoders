@@ -350,6 +350,42 @@ namespace RoboticCoders.Migrations
                     b.ToTable("Lessons");
                 });
 
+            modelBuilder.Entity("RoboticCoders.Models.LessonHtmlResource", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(260)
+                        .HasColumnType("nvarchar(260)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("LessonHtmlResources");
+                });
+
             modelBuilder.Entity("RoboticCoders.Models.Module", b =>
                 {
                     b.Property<int>("Id")
@@ -518,6 +554,17 @@ namespace RoboticCoders.Migrations
                     b.Navigation("Module");
                 });
 
+            modelBuilder.Entity("RoboticCoders.Models.LessonHtmlResource", b =>
+                {
+                    b.HasOne("RoboticCoders.Models.Lesson", "Lesson")
+                        .WithMany("HtmlResources")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+                });
+
             modelBuilder.Entity("RoboticCoders.Models.Module", b =>
                 {
                     b.HasOne("RoboticCoders.Models.Course", "Course")
@@ -569,6 +616,11 @@ namespace RoboticCoders.Migrations
             modelBuilder.Entity("RoboticCoders.Models.CourseTeacherAssignment", b =>
                 {
                     b.Navigation("StudentEnrollments");
+                });
+
+            modelBuilder.Entity("RoboticCoders.Models.Lesson", b =>
+                {
+                    b.Navigation("HtmlResources");
                 });
 
             modelBuilder.Entity("RoboticCoders.Models.Module", b =>
