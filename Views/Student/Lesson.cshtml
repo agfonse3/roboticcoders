@@ -1,4 +1,5 @@
 ﻿@model RoboticCoders.ViewModels.Student.StudentLessonViewModel
+
 @{
     var slidePath = string.IsNullOrWhiteSpace(Model.Lesson.SlideUrl)
         ? string.Empty
@@ -16,17 +17,22 @@
     var officeEmbedUrl = isPpt
         ? $"https://view.officeapps.live.com/op/embed.aspx?src={Uri.EscapeDataString(absoluteSlideUrl)}"
         : string.Empty;
+
     var googleEmbedUrl = isPpt
         ? $"https://docs.google.com/gview?embedded=true&url={Uri.EscapeDataString(absoluteSlideUrl)}"
         : string.Empty;
 
     var canPreviewInline = isPdf || isPpt;
+
     var totalLessons = Model.Modules.SelectMany(m => m.Lessons).Count();
+
     var isLocalHost = string.Equals(Context.Request.Host.Host, "localhost", StringComparison.OrdinalIgnoreCase)
         || string.Equals(Context.Request.Host.Host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
+
     var isStudent = User.IsInRole("Estudiante");
     var isTeacher = User.IsInRole("Docente");
     var isAdmin = User.IsInRole("Admin");
+
     var lessonBasePath = isStudent ? "/Student/Lesson/" : "/Course/Lesson/";
     var backToCoursesUrl = isStudent
         ? "/Student/Dashboard"
@@ -35,11 +41,19 @@
             : isAdmin
                 ? "/Admin/Dashboard"
                 : "/Course/Index";
+
     var viewCourseUrl = isStudent
         ? $"/Student/Course/{Model.CourseId}"
         : isTeacher
             ? $"/Teacher/Course?courseId={Model.CourseId}"
             : $"/Course/Details/{Model.CourseId}";
+
+    var htmls = Model.Lesson.HtmlResources?
+        .OrderBy(x => x.Id)
+        .ToList()
+        ?? new List<RoboticCoders.Models.LessonHtmlResource>();
+
+    var firstUrl = htmls.FirstOrDefault()?.Url ?? "";
 }
 
 <div class="lesson-shell container-fluid">
@@ -53,7 +67,7 @@
 
                 <div class="progress-kpi">
                     <div class="kpi-ring">
-                        <strong>@Model.ProgressPercent%</strong>
+                        <strong id="kpiPercent">@Model.ProgressPercent%</strong>
                     </div>
                     <div>
                         <small>Progreso</small>
@@ -71,11 +85,51 @@
                                 {
                                     var completed = Model.CompletedLessonIds.Contains(lesson.Id);
                                     var activeClass = lesson.Id == Model.Lesson.Id ? "active-link" : string.Empty;
+
                                     <li>
                                         <a class="@activeClass" href="@($"{lessonBasePath}{lesson.Id}")">
                                             <span class="state-dot @(completed ? "done" : "pending")"></span>
                                             @lesson.Title
                                         </a>
+
+                                        @if (lesson.Id == Model.Lesson.Id)
+                                        {
+                                            <ul class="lesson-subnav">
+                                                @if (!string.IsNullOrEmpty(Model.Lesson.VideoUrl))
+                                                {
+                                                    <li>
+                                                        <a data-step-link="video" href="#video">
+                                                            <span class="step-dot" data-step-dot="video"></span>
+                                                            Video
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (hasSlides)
+                                                {
+                                                    <li>
+                                                        <a data-step-link="slides" href="#slides">
+                                                            <span class="step-dot" data-step-dot="slides"></span>
+                                                            Diapositivas
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (htmls.Any())
+                                                {
+                                                    <li>
+                                                        <a data-step-link="interactive" href="#interactive">
+                                                            <span class="step-dot" data-step-dot="interactive"></span>
+                                                            Juego
+                                                        </a>
+                                                    </li>
+                                                }
+                                                <li>
+                                                    <a data-step-link="content" href="#content">
+                                                        <span class="step-dot" data-step-dot="content"></span>
+                                                        Lección
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        }
                                     </li>
                                 }
                             </ul>
@@ -92,127 +146,116 @@
                     <h1>@Model.Lesson.Title</h1>
                     <small>@Model.Course?.Title</small>
                 </div>
+
                 <div class="head-actions">
                     <a class="btn btn-outline-secondary" href="@viewCourseUrl">Ver este curso</a>
-                    @if (isStudent)
-                    {
-                        <form asp-controller="Student" asp-action="CompleteLesson" method="post" class="m-0">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
-                            @if (Model.NextLessonId.HasValue)
-                            {
-                                <input type="hidden" name="nextLessonId" value="@Model.NextLessonId.Value" />
-                            }
-                            <button class="btn btn-success">Marcar completada</button>
-                        </form>
-                    }
-                    else if (isTeacher)
-                    {
-                        <form asp-controller="Teacher" asp-action="CompleteLesson" method="post" class="m-0">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="courseId" value="@Model.CourseId" />
-                            <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
-                            <button class="btn btn-success">Marcar revisada</button>
-                        </form>
-                    }
+
+                    <button type="button" class="btn btn-outline-primary" id="stepPrev">Anterior</button>
+                    <button type="button" class="btn btn-primary" id="stepNext">Siguiente</button>
+
                     @if (Model.NextLessonId.HasValue)
                     {
-                        <a class="btn btn-primary" href="@($"{lessonBasePath}{Model.NextLessonId}")">Siguiente</a>
+                        <form id="nextLessonForm" asp-controller="Student" asp-action="CompleteAndNext" method="post" class="m-0 d-none">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
+                            <input type="hidden" name="nextLessonId" value="@Model.NextLessonId.Value" />
+                            <button class="btn btn-success" type="submit">Siguiente lección</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form id="finishLessonForm" asp-controller="Student" asp-action="CompleteAndFinish" method="post" class="m-0 d-none">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="lessonId" value="@Model.Lesson.Id" />
+                            <button class="btn btn-success" type="submit">Finalizar</button>
+                        </form>
                     }
                 </div>
             </header>
 
             <div class="row g-4">
                 <div class="col-12 col-xxl-8">
-                    @if (!string.IsNullOrEmpty(Model.Lesson.VideoUrl))
-                    {
-                        <section class="content-card">
-                            <h2>Video</h2>
-                            <div class="ratio ratio-16x9">
-                                <iframe src="@Model.Lesson.VideoUrl" title="Video" allowfullscreen></iframe>
-                            </div>
-                        </section>
-                    }
+                    <div id="lessonSteps">
 
-                    @if (hasSlides)
-                    {
-                        <section class="content-card">
-                            <h2>Diapositivas</h2>
-                            @if (canPreviewInline)
-                            {
-                                if (isPdf)
+                        @if (!string.IsNullOrEmpty(Model.Lesson.VideoUrl))
+                        {
+                            <section id="video" class="content-card lesson-step">
+                                <h2>Video</h2>
+                                <div class="ratio ratio-16x9">
+                                    <iframe src="@Model.Lesson.VideoUrl" title="Video" allowfullscreen></iframe>
+                                </div>
+                            </section>
+                        }
+
+                        @if (hasSlides)
+                        {
+                            <section id="slides" class="content-card lesson-step">
+                                <h2>Diapositivas</h2>
+
+                                @if (canPreviewInline)
                                 {
-                                    <iframe src="@slidePath" width="100%" height="560" style="border:0; border-radius:10px;"></iframe>
-                                }
-                                else if (isPpt)
-                                {
-                                    <div class="viewer-switch mb-2">
-                                        <button type="button" class="btn btn-sm btn-outline-primary active" data-viewer="office">Microsoft</button>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="google">Google</button>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="direct">Navegador</button>
-                                    </div>
-                                    <iframe id="pptPreviewFrame"
-                                            src="@officeEmbedUrl"
-                                            width="100%"
-                                            height="560"
-                                            style="border:0; border-radius:10px;"
-                                            data-office="@officeEmbedUrl"
-                                            data-google="@googleEmbedUrl"
-                                            data-direct="@slidePath"
-                                            allowfullscreen></iframe>
-                                    if (isLocalHost)
+                                    if (isPdf)
                                     {
-                                        <p class="inline-note">Si estas en localhost, Microsoft/Google no pueden leer tu archivo local. Usa "Navegador", "Abrir" o "Descargar".</p>
+                                        <iframe src="@slidePath" width="100%" height="560" style="border:0; border-radius:10px;"></iframe>
+                                    }
+                                    else if (isPpt)
+                                    {
+                                        <div class="viewer-switch mb-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary active" data-viewer="office">Microsoft</button>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="google">Google</button>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-viewer="direct">Navegador</button>
+                                        </div>
+
+                                        <iframe id="pptPreviewFrame"
+                                                src="@officeEmbedUrl"
+                                                width="100%"
+                                                height="560"
+                                                style="border:0; border-radius:10px;"
+                                                data-office="@officeEmbedUrl"
+                                                data-google="@googleEmbedUrl"
+                                                data-direct="@slidePath"
+                                                allowfullscreen></iframe>
+
+                                        if (isLocalHost)
+                                        {
+                                            <p class="inline-note">Si estas en localhost, Microsoft/Google no pueden leer tu archivo local. Usa "Navegador", "Abrir" o "Descargar".</p>
+                                        }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                <p class="inline-note">Vista previa en linea disponible para PDF, PPT y PPTX.</p>
-                            }
+                                else
+                                {
+                                    <p class="inline-note">Vista previa en linea disponible para PDF, PPT y PPTX.</p>
+                                }
+                            </section>
+                        }
+
+                        @if (htmls.Any())
+                        {
+                            <section id="interactive" class="content-card lesson-step">
+                                <h2>Interactivo</h2>
+
+                                <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="htmlPrev">Anterior</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="htmlNext">Siguiente</button>
+                                    <span class="text-muted" id="htmlCounter" style="font-size:.9rem;"></span>
+                                </div>
+
+                                <iframe id="lessonHtmlFrame"
+                                        src="@firstUrl"
+                                        width="100%"
+                                        height="560"
+                                        style="border:0; border-radius:10px;"
+                                        data-urls='@System.Text.Json.JsonSerializer.Serialize(htmls.Select(x => x.Url))'>
+                                </iframe>
+                            </section>
+                        }
+
+                        <section id="content" class="content-card lesson-step">
+                            <h2>Contenido</h2>
+                            <div class="lesson-html">@Html.Raw(Model.Lesson.Content)</div>
                         </section>
-                    }
-@{
-    var htmls = Model.Lesson.HtmlResources?.OrderBy(x => x.Id).ToList()
-        ?? new List<RoboticCoders.Models.LessonHtmlResource>();
-    var firstUrl = htmls.FirstOrDefault()?.Url;
-}
 
-@if (htmls.Any())
-{
-    <section class="content-card">
-        <h2>Interactivo</h2>
-        <div class="viewer-switch mb-2">
-            @foreach (var r in htmls)
-            {
-                <button type="button" class="btn btn-sm btn-outline-primary html-tab"
-                        data-url="@r.Url">
-                    @(string.IsNullOrWhiteSpace(r.Title) ? r.OriginalFileName : r.Title)
-                </button>
-            }
-        </div>
-
-        <iframe id="lessonHtmlFrame" src="@firstUrl"
-                width="100%" height="560"
-                style="border:0; border-radius:10px;"></iframe>
-    </section>
-
-    <script>
-        (() => {
-            const frame = document.getElementById('lessonHtmlFrame');
-            document.querySelectorAll('.html-tab').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    frame.src = btn.dataset.url;
-                });
-            });
-        })();
-    </script>
-}
-
-                    <section class="content-card">
-                        <h2>Contenido</h2>
-                        <div class="lesson-html">@Html.Raw(Model.Lesson.Content)</div>
-                    </section>
+                    </div>
                 </div>
 
                 <div class="col-12 col-xxl-4">
@@ -234,7 +277,11 @@
                     <section class="content-card mt-3 sticky-side">
                         <h2>Progreso del curso</h2>
                         <div class="progress" style="height: 12px;">
-                            <div class="progress-bar" role="progressbar" style="width:@Model.ProgressPercent%" aria-valuenow="@Model.ProgressPercent" aria-valuemin="0" aria-valuemax="100">@Model.ProgressPercent%</div>
+                            <div id="courseProgressBar" class="progress-bar" role="progressbar"
+                                 style="width:@Model.ProgressPercent%"
+                                 aria-valuenow="@Model.ProgressPercent" aria-valuemin="0" aria-valuemax="100">
+                                @Model.ProgressPercent%
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -244,6 +291,9 @@
 </div>
 
 <style>
+    .lesson-step { display:none; }
+    .lesson-step.is-active { display:block; }
+
     .lesson-shell {
         --ink: #121a2f;
         --muted: #64738f;
@@ -258,9 +308,7 @@
         border-right: 1px solid var(--line);
     }
 
-    .aside-content {
-        padding: 24px 18px;
-    }
+    .aside-content { padding: 24px 18px; }
 
     .aside-top {
         display: flex;
@@ -292,14 +340,8 @@
         border: 2px solid #c9d7ef;
     }
 
-    .module-nav {
-        margin-bottom: 12px;
-    }
-
-    .module-nav > strong {
-        display: block;
-        margin-bottom: 6px;
-    }
+    .module-nav { margin-bottom: 12px; }
+    .module-nav > strong { display: block; margin-bottom: 6px; }
 
     .module-nav ul {
         list-style: none;
@@ -307,9 +349,7 @@
         padding: 0 0 0 6px;
     }
 
-    .module-nav li {
-        margin-bottom: 4px;
-    }
+    .module-nav li { margin-bottom: 4px; }
 
     .module-nav a {
         color: #223355;
@@ -333,17 +373,43 @@
         flex: none;
     }
 
-    .state-dot.done {
-        background: #159f67;
+    .state-dot.done { background: #159f67; }
+    .state-dot.pending { background: #b6c2d8; }
+
+    .lesson-subnav{
+        list-style:none;
+        margin: 6px 0 10px 18px;
+        padding: 0 0 0 10px;
+        border-left: 2px solid rgba(0,0,0,.08);
     }
 
-    .state-dot.pending {
-        background: #b6c2d8;
+    .lesson-subnav a{
+        text-decoration:none;
+        color:#35507a;
+        font-size:.92rem;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
     }
 
-    .lesson-main {
-        padding: 26px;
+    .lesson-subnav a.is-active{
+        font-weight:700;
+        text-decoration:underline;
+        color:#0b4eb2;
     }
+
+    .step-dot{
+        width:9px;
+        height:9px;
+        border-radius:999px;
+        display:inline-block;
+        background:#b6c2d8;
+        flex:none;
+    }
+
+    .step-dot.done{ background:#159f67; }
+
+    .lesson-main { padding: 26px; }
 
     .lesson-head {
         display: flex;
@@ -406,14 +472,9 @@
         flex-wrap: wrap;
     }
 
-    .lesson-html {
-        line-height: 1.62;
-    }
+    .lesson-html { line-height: 1.62; }
 
-    .sticky-side {
-        position: sticky;
-        top: 16px;
-    }
+    .sticky-side { position: sticky; top: 16px; }
 
     @@media (max-width: 1199px) {
         .lesson-aside {
@@ -421,38 +482,20 @@
             border-right: 0;
             border-bottom: 1px solid var(--line);
         }
-
-        .sticky-side {
-            position: static;
-        }
+        .sticky-side { position: static; }
     }
 
     @@media (max-width: 768px) {
-        .lesson-main {
-            padding: 16px;
-        }
-
-        .aside-content {
-            padding: 16px 14px;
-        }
-
-        .lesson-head {
-            flex-direction: column;
-        }
-
-        .head-actions {
-            justify-content: flex-start;
-        }
+        .lesson-main { padding: 16px; }
+        .aside-content { padding: 16px 14px; }
+        .lesson-head { flex-direction: column; }
+        .head-actions { justify-content: flex-start; }
     }
 </style>
 
 <script>
+    // PPT viewer switch
     (() => {
-        const ring = document.querySelector('.kpi-ring');
-        if (ring) {
-            ring.style.setProperty('--p', '@Model.ProgressPercent');
-        }
-
         const frame = document.getElementById('pptPreviewFrame');
         if (!frame) return;
 
@@ -464,11 +507,162 @@
                     mode === 'google' ? frame.dataset.google :
                     mode === 'direct' ? frame.dataset.direct :
                     frame.dataset.office;
+
                 frame.src = nextSrc || frame.src;
 
                 buttons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             });
         });
+    })();
+
+    // Carrusel de HTML interactivos
+    (() => {
+        const frame = document.getElementById('lessonHtmlFrame');
+        if (!frame) return;
+
+        const urls = JSON.parse(frame.dataset.urls || "[]");
+        let idx = 0;
+
+        const prevBtn = document.getElementById('htmlPrev');
+        const nextBtn = document.getElementById('htmlNext');
+        const counter = document.getElementById('htmlCounter');
+
+        function refresh() {
+            prevBtn && (prevBtn.disabled = (idx <= 0));
+            nextBtn && (nextBtn.disabled = (idx >= urls.length - 1));
+            counter && (counter.textContent = `${idx + 1} / ${urls.length}`);
+            frame.src = urls[idx];
+        }
+
+        prevBtn?.addEventListener('click', () => { if (idx > 0) { idx--; refresh(); } });
+        nextBtn?.addEventListener('click', () => { if (idx < urls.length - 1) { idx++; refresh(); } });
+
+        refresh();
+    })();
+
+    // Wizard sublecciones + dots + auto-submit al final para sumar la lección
+    (() => {
+        const steps = Array.from(document.querySelectorAll('.lesson-step'));
+        if (!steps.length) return;
+
+        const lessonId = @Model.Lesson.Id;
+
+        const btnPrev = document.getElementById('stepPrev');
+        const btnNext = document.getElementById('stepNext');
+
+        const nextLessonForm = document.getElementById('nextLessonForm');
+        const finishLessonForm = document.getElementById('finishLessonForm');
+
+        const stepLinks = Array.from(document.querySelectorAll('.lesson-subnav a[href^="#"]'));
+
+        const LS_KEY = "rc_steps_progress_v1";
+
+        function loadState() {
+            try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }
+            catch { return {}; }
+        }
+
+        function saveState(state) {
+            localStorage.setItem(LS_KEY, JSON.stringify(state));
+        }
+
+        function getCompletedStepsForLesson(id) {
+            const s = loadState();
+            return Math.max(0, Number(s[id] || 0));
+        }
+
+        function setCompletedStepsForLesson(id, value) {
+            const s = loadState();
+            s[id] = Math.max(0, Number(value || 0));
+            saveState(s);
+        }
+
+        let i = 0;
+
+        function updateActiveLink() {
+            const currentId = steps[i]?.id;
+            document.querySelectorAll('.lesson-subnav a[href^="#"]').forEach(a => {
+                a.classList.toggle('is-active', a.getAttribute('href') === ("#" + currentId));
+            });
+        }
+
+        function refreshStepDots() {
+            const completed = getCompletedStepsForLesson(lessonId);
+
+            steps.forEach((s, idx) => {
+                const dot = document.querySelector(`.step-dot[data-step-dot="${s.id}"]`);
+                if (!dot) return;
+                dot.classList.toggle('done', idx < completed);
+            });
+        }
+
+        function show(idx) {
+            i = Math.max(0, Math.min(idx, steps.length - 1));
+            steps.forEach((s, k) => s.classList.toggle('is-active', k === i));
+
+            btnPrev && (btnPrev.disabled = (i === 0));
+
+            updateActiveLink();
+            refreshStepDots();
+
+            if (steps[i].id) history.replaceState(null, "", "#" + steps[i].id);
+            steps[i].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function markCompleted(count) {
+            // guardamos el máximo alcanzado
+            const current = getCompletedStepsForLesson(lessonId);
+            setCompletedStepsForLesson(lessonId, Math.max(current, count));
+        }
+
+        btnPrev?.addEventListener('click', () => show(i - 1));
+
+        btnNext?.addEventListener('click', () => {
+            const lastIndex = steps.length - 1;
+
+            // Si ya estamos en el último step: completar lección en BD y pasar
+            if (i >= lastIndex) {
+                if (nextLessonForm) nextLessonForm.submit();
+                else if (finishLessonForm) finishLessonForm.submit();
+                return;
+            }
+
+            const next = i + 1;
+
+            // al avanzar, marcamos completado el step actual (next = cantidad de steps completados)
+            markCompleted(next);
+
+            // si vamos a llegar al último step, marcamos todos como completados (incluye "Lección")
+            if (next === lastIndex) {
+                markCompleted(steps.length);
+            }
+
+            show(next);
+        });
+
+        // clicks en sidebar: saltar steps y marcar completados si vas hacia adelante
+        stepLinks.forEach(a => {
+            a.addEventListener('click', (e) => {
+                const id = a.getAttribute('href')?.substring(1);
+                const idx = steps.findIndex(s => s.id === id);
+                if (idx < 0) return;
+
+                e.preventDefault();
+
+                if (idx > i) {
+                    // si saltas hacia adelante, cuenta como completado hasta ese punto
+                    markCompleted(idx);
+                    if (idx === steps.length - 1) markCompleted(steps.length);
+                }
+
+                show(idx);
+            });
+        });
+
+        // init (por hash)
+        const hash = (location.hash || "").replace("#", "");
+        const hashIndex = steps.findIndex(s => s.id === hash);
+        show(hashIndex >= 0 ? hashIndex : 0);
     })();
 </script>
