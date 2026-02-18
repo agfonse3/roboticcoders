@@ -12,9 +12,7 @@ public class StudentController : Controller
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public StudentController(
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager)
+    public StudentController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
         _userManager = userManager;
@@ -23,12 +21,10 @@ public class StudentController : Controller
     public async Task<IActionResult> Dashboard()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
 
-        var roles = await _userManager.GetRolesAsync(user!);
-        Console.WriteLine("ROLES DEL USUARIO: " + string.Join(",", roles));
-       
         var courses = await _context.CourseEnrollments
-            .Where(e => e.UserId == user!.Id)
+            .Where(e => e.UserId == user.Id)
             .Include(e => e.Course!)
                 .ThenInclude(c => c.Modules)
                     .ThenInclude(m => m.Lessons)
@@ -36,19 +32,18 @@ public class StudentController : Controller
             .ToListAsync();
 
         var progress = await _context.StudentLessonProgresses
-            .Where(p => p.UserId == user!.Id)
+            .Where(p => p.UserId == user.Id)
             .ToListAsync();
 
         var viewModel = courses.Select(course =>
         {
             var totalLessons = course.Modules.SelectMany(m => m.Lessons).Count();
+
             var completedLessons = progress.Count(p =>
                 course.Modules.SelectMany(m => m.Lessons)
-                .Any(l => l.Id == p.LessonId && p.IsCompleted));
+                    .Any(l => l.Id == p.LessonId && p.IsCompleted));
 
-            var percent = totalLessons == 0
-                ? 0
-                : (completedLessons * 100) / totalLessons;
+            var percent = totalLessons == 0 ? 0 : (completedLessons * 100) / totalLessons;
 
             return new StudentCourseViewModel
             {
@@ -67,7 +62,7 @@ public class StudentController : Controller
     {
         var lesson = await _context.Lessons
             .Include(l => l.Module)
-            .ThenInclude(m => m.Course)
+                .ThenInclude(m => m.Course)
             .FirstOrDefaultAsync(l => l.Id == id);
 
         if (lesson == null) return NotFound();
@@ -88,18 +83,23 @@ public class StudentController : Controller
                 .ThenInclude(m => m.Lessons)
             .FirstOrDefaultAsync();
 
-        var lessonsOrdered = course?.Modules
+        if (course == null) return NotFound();
+
+        var lessonsOrdered = course.Modules
             .OrderBy(m => m.Id)
             .SelectMany(m => m.Lessons.OrderBy(l => l.Id))
-            .ToList() ?? new List<Lesson>();
+            .ToList();
 
         var idx = lessonsOrdered.FindIndex(l => l.Id == id);
-        int? nextId = null;
-        if (idx >= 0 && idx < lessonsOrdered.Count - 1)
-            nextId = lessonsOrdered[idx + 1].Id;
+
+        int? nextId = (idx >= 0 && idx < lessonsOrdered.Count - 1) ? lessonsOrdered[idx + 1].Id : (int?)null;
+        int? prevId = (idx > 0) ? lessonsOrdered[idx - 1].Id : (int?)null;
+
+        // FIX: progreso SOLO del curso actual
+        var lessonIdsInCourse = lessonsOrdered.Select(l => l.Id).ToList();
 
         var progressForUser = await _context.StudentLessonProgresses
-            .Where(p => p.UserId == user.Id && course != null)
+            .Where(p => p.UserId == user.Id && lessonIdsInCourse.Contains(p.LessonId))
             .ToListAsync();
 
         var completedIds = progressForUser
@@ -115,10 +115,11 @@ public class StudentController : Controller
         {
             Lesson = lesson,
             NextLessonId = nextId,
+            PrevLessonId = prevId,
             IsCompleted = progressForUser.FirstOrDefault(p => p.LessonId == id)?.IsCompleted ?? false,
             CourseId = courseId,
             Course = course,
-            Modules = course?.Modules.OrderBy(m => m.Id).ToList() ?? new List<Module>(),
+            Modules = course.Modules.OrderBy(m => m.Id).ToList(),
             CompletedLessonIds = completedIds,
             ProgressPercent = progressPercent
         };
@@ -135,8 +136,7 @@ public class StudentController : Controller
         var enrolled = await _context.CourseEnrollments
             .AnyAsync(e => e.CourseId == id && e.UserId == user.Id);
 
-        if (!enrolled)
-            return NotFound();
+        if (!enrolled) return NotFound();
 
         var course = await _context.Courses
             .Where(c => c.Id == id)
@@ -149,7 +149,9 @@ public class StudentController : Controller
         return View(course);
     }
 
+    // Si todavía lo usas desde algún lado, déjalo protegido
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> CompleteLesson(int lessonId, int? nextLessonId)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -183,6 +185,79 @@ public class StudentController : Controller
 
         var lesson = await _context.Lessons.Include(l => l.Module).FirstOrDefaultAsync(l => l.Id == lessonId);
         var courseId = lesson?.Module?.CourseId;
+
+        if (courseId.HasValue && courseId.Value > 0)
+            return RedirectToAction("Course", new { id = courseId.Value });
+
+        return RedirectToAction("Dashboard");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CompleteAndNext(int lessonId, int nextLessonId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
+
+        var progress = await _context.StudentLessonProgresses
+            .FirstOrDefaultAsync(p => p.UserId == user.Id && p.LessonId == lessonId);
+
+        if (progress == null)
+        {
+            progress = new StudentLessonProgress
+            {
+                UserId = user.Id,
+                LessonId = lessonId,
+                IsCompleted = true,
+                CompletedAt = DateTime.UtcNow
+            };
+            _context.StudentLessonProgresses.Add(progress);
+        }
+        else
+        {
+            progress.IsCompleted = true;
+            progress.CompletedAt = DateTime.UtcNow;
+            _context.StudentLessonProgresses.Update(progress);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Lesson", new { id = nextLessonId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CompleteAndFinish(int lessonId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
+
+        var progress = await _context.StudentLessonProgresses
+            .FirstOrDefaultAsync(p => p.UserId == user.Id && p.LessonId == lessonId);
+
+        if (progress == null)
+        {
+            progress = new StudentLessonProgress
+            {
+                UserId = user.Id,
+                LessonId = lessonId,
+                IsCompleted = true,
+                CompletedAt = DateTime.UtcNow
+            };
+            _context.StudentLessonProgresses.Add(progress);
+        }
+        else
+        {
+            progress.IsCompleted = true;
+            progress.CompletedAt = DateTime.UtcNow;
+            _context.StudentLessonProgresses.Update(progress);
+        }
+
+        await _context.SaveChangesAsync();
+
+        var lesson = await _context.Lessons.Include(l => l.Module).FirstOrDefaultAsync(l => l.Id == lessonId);
+        var courseId = lesson?.Module?.CourseId;
+
         if (courseId.HasValue && courseId.Value > 0)
             return RedirectToAction("Course", new { id = courseId.Value });
 

@@ -42,6 +42,7 @@ namespace RoboticCoders.Controllers
         public async Task<IActionResult> Lesson(int id)
         {
             var lesson = await _context.Lessons
+            .Include(l => l.HtmlResources)
                 .Include(l => l.Module)
                 .ThenInclude(m => m.Course)
                 .FirstOrDefaultAsync(l => l.Id == id);

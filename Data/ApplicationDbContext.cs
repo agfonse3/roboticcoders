@@ -13,6 +13,7 @@ namespace RoboticCoders.Data
         public DbSet<StudentLessonProgress> StudentLessonProgresses { get; set; }
         public DbSet<CourseEnrollment> CourseEnrollments { get; set; }
         public DbSet<CourseTeacherAssignment> CourseTeacherAssignments { get; set; }
+        public DbSet<LessonHtmlResource> LessonHtmlResources { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -60,6 +61,20 @@ namespace RoboticCoders.Data
                     .HasForeignKey(x => x.TeacherId)
                     .OnDelete(Microsoft.EntityFrameworkCore.DeleteBehavior.Restrict);
             });
+            builder.Entity<LessonHtmlResource>(b =>
+{
+    b.HasKey(x => x.Id);
+
+    b.HasOne(x => x.Lesson)
+     .WithMany(l => l.HtmlResources)
+     .HasForeignKey(x => x.LessonId)
+     .OnDelete(DeleteBehavior.Cascade);
+
+    b.Property(x => x.Title).HasMaxLength(200);
+    b.Property(x => x.OriginalFileName).HasMaxLength(260);
+    b.Property(x => x.Url).HasMaxLength(500);
+});
+
         }
     }
 }
